@@ -1,0 +1,556 @@
+import { PageLayout } from "@/components/PageLayout"
+import { Callout } from "@/components/Callout"
+import { WorkflowCard } from "@/components/WorkflowCard"
+
+export default function SystemWorkflows() {
+  return (
+    <PageLayout
+      title="System Workflows"
+      description="Assignments, notifications, date stamps, DND handling, and cross-pipeline cleanup."
+      slug="/workflows/key-workflows/system-workflows"
+    >
+      <p>
+        The previous pages covered workflows that map to a contact&apos;s
+        journey: lead, intro offer, membership. This page covers the
+        behind-the-scenes workflows that support all of those stages.
+        These are the utilities: they assign contacts to team members,
+        stamp important dates, send internal notifications when
+        purchases happen, handle DND opt-outs, and mark sales across
+        multiple pipelines at once.
+      </p>
+
+      <p>
+        You will rarely need to edit these workflows. But understanding
+        what they do helps when troubleshooting: if a contact is
+        missing a date stamp, not assigned to a user, or their sale
+        was not reflected in a pipeline, the answer is usually in one
+        of these.
+      </p>
+
+      <h2>User assignment</h2>
+
+      <p>
+        When a new contact enters the system, they need to be assigned
+        to a team member so they have an owner. Two workflows handle
+        this: one for new leads and one for new sales.
+      </p>
+
+      <WorkflowCard
+        name="01. Systems | Assign User | New Lead"
+        purpose="Automatically assigns a team member to new lead contacts so they have an owner in the system for tasks, notifications, and pipeline visibility."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/4e886d32-fabf-447d-95b5-ef74666fe331"
+        steps={[
+          {
+            type: "action",
+            label: "Assign to user",
+            detail: "Assigns the contact to the configured team member for this location. The specific user is set in the workflow action, not dynamically.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="02. Systems | Assign User | Sale"
+        purpose="Assigns a team member to contacts when a sale is made. Ensures that purchased contacts have an owner for follow-up tasks and pipeline management."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/89e15aea-86f6-4198-a967-662e8b1d045f"
+        steps={[
+          {
+            type: "action",
+            label: "Assign to user",
+            detail: "Assigns the contact to the configured team member. May be the same or different user as the lead assignment, depending on studio setup.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <Callout type="tip" title="Why two separate assignment workflows?">
+        <p>
+          Leads and sales are assigned separately because some studios
+          want different team members handling leads (sales/front desk)
+          vs managing active members (studio manager). Splitting the
+          assignment also means the sale assignment can re-assign the
+          contact if needed, without conflicting with the lead
+          assignment.
+        </p>
+      </Callout>
+
+      <h2>Date stamping</h2>
+
+      <p>
+        Several workflows exist to stamp important dates on the
+        contact record when events happen. These dates are used for
+        reporting, filtering, and time-based logic in other workflows.
+      </p>
+
+      <WorkflowCard
+        name="00. Update 'Date Contact Created' when new contact is made"
+        purpose="Sets the 'Date Contact Created' field to the current date when a new contact enters the system. Used for reporting and time-based filtering."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/f60b4791-64d1-40d2-8823-ecf9a4e00ab9"
+        steps={[
+          {
+            type: "action",
+            label: "Set Date Contact Created to current date",
+            detail: "Stamps the contact with today's date.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="02. Intro Offers | Update Date Intro Offer Purchased"
+        purpose="When a contact's Active Package changes to an intro offer, stamps the purchase date, adds the 'active - intro offer' tag, and watches for when they leave intro offer status (either upgrading to membership or going inactive)."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/5c9cdd07-074f-4777-ad5c-092e0f0cb2d5"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Does their Active Package Category actually contain Intro Offers?",
+            detail: "Confirms the change was to an intro offer before stamping.",
+          },
+          {
+            type: "action",
+            label: "Update field: Date Intro Offer Purchased = current date",
+            detail: "Stamps when the intro offer was purchased.",
+          },
+          {
+            type: "action",
+            label: "Add tag: active - intro offer",
+            detail: "Tags them as actively on an intro offer for workflow routing.",
+          },
+          {
+            type: "wait",
+            label: "Wait for status change",
+            detail: "Watches for when their package category changes (to membership, package, or empty).",
+          },
+          {
+            type: "condition",
+            label: "What did it change to?",
+            detail: "Routes based on outcome: Location Status = inactive (expired/cancelled), or Active Package Category now contains Memberships or Packages (upgraded).",
+          },
+          {
+            type: "action",
+            label: "Remove tag: active - packages",
+            detail: "Cleans up the active status tags based on the transition.",
+          },
+          {
+            type: "action",
+            label: "Update field: clear intro offer date if needed",
+            detail: "Handles date field cleanup based on the transition type.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="03. Memberships | Update Date Membership Purchased"
+        purpose="When a contact's Active Package changes to a membership, stamps the purchase date, adds the 'active - memberships' tag, and watches for when they leave membership status. Includes a guard for recently suspended members to avoid re-stamping."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/383da02e-7936-449e-9877-95f7f7086ec4"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Does their Active Package Category actually contain Memberships?",
+            detail: "Confirms this is a real membership purchase.",
+          },
+          {
+            type: "condition",
+            label: "Do they already have the tag 'active - memberships'?",
+            detail: "Prevents double-processing if the workflow fires twice.",
+          },
+          {
+            type: "condition",
+            label: "Do they have the 'recently suspended' tag?",
+            detail: "If they just came back from suspension, their Active Package updates but this is not a new purchase. The 'recently suspended' tag prevents the date from being re-stamped.",
+          },
+          {
+            type: "action",
+            label: "Update field: Date Membership Purchased = current date",
+            detail: "Stamps the membership purchase date.",
+          },
+          {
+            type: "action",
+            label: "Add tag: active - memberships",
+            detail: "Tags them as an active member.",
+          },
+          {
+            type: "wait",
+            label: "Wait for status change",
+            detail: "Watches for when their package category changes.",
+          },
+          {
+            type: "action",
+            label: "Remove tag: active - memberships",
+            detail: "Cleans up when they leave membership status.",
+          },
+          {
+            type: "action",
+            label: "Clear membership date field",
+            detail: "Removes the date stamp so it does not show stale data.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="04. Packages | Update Date Packages Purchased"
+        purpose="When a contact's Active Package changes to a package (class packs, etc.), stamps the purchase date, adds the 'active - packages' tag, and watches for when they leave package status."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/3591a37b-a052-42b2-8030-2cdaad3621f8"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Does their Active Package Category actually contain Packages?",
+            detail: "Confirms this is a package purchase.",
+          },
+          {
+            type: "action",
+            label: "Update field: Date Packages Purchased = current date",
+            detail: "Stamps the package purchase date.",
+          },
+          {
+            type: "action",
+            label: "Add tag: active - packages",
+            detail: "Tags them as having an active package.",
+          },
+          {
+            type: "wait",
+            label: "Wait for status change",
+            detail: "Watches for when their package expires or they upgrade.",
+          },
+          {
+            type: "action",
+            label: "Remove tag: active - packages",
+            detail: "Cleans up the tag.",
+          },
+          {
+            type: "action",
+            label: "Clear package date field",
+            detail: "Removes the date stamp.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="10. Intro Offer First Visit Date Field"
+        purpose="When a contact's Intro Offer Pipeline Visits reaches 1 (their first class), stamps the 'Intro Offer First Visit Date' field. Used for calculating the 14-day intro offer window."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/ad1b7c9a-aa36-4e9f-8c3c-8405a3306ab5"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Do they actually have 'Intro Offer(s)' in their Active Package Category?",
+            detail: "Confirms they are on an intro offer before stamping.",
+          },
+          {
+            type: "action",
+            label: "Update field: Intro Offer First Visit Date = current date",
+            detail: "Stamps when they attended their first class. This date is used by the 14-day tagging workflow to calculate when the intro offer expires.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <h2>Internal notifications</h2>
+
+      <WorkflowCard
+        name="03. Systems | Active Package Change Internal Notification"
+        purpose="Sends an internal email to the studio when a contact's Active Package changes. Different notification templates for intro offer purchases vs membership/package purchases. Can be turned on or off per location."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/6ec1093e-8e3d-4cbf-a4a9-f4448f490971"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "What is their Active Package Category?",
+            detail: "Routes to different notification emails for intro offers vs memberships/packages.",
+          },
+          {
+            type: "action",
+            label: "Internal notification: Intro Offer purchase",
+            detail: "Sends an email to the studio when someone purchases an intro offer.",
+          },
+          {
+            type: "condition",
+            label: "Do they have the 'recently suspended' tag?",
+            detail: "For memberships, checks whether this is a genuinely new purchase or a return from suspension. Suspended members returning do not need a 'new purchase' notification.",
+          },
+          {
+            type: "action",
+            label: "Internal notification: Membership/Package purchase",
+            detail: "Sends an email to the studio for new membership or package purchases (excluding returns from suspension).",
+          },
+          {
+            type: "action",
+            label: "Internal notification: Return from suspension",
+            detail: "If they have the 'recently suspended' tag, sends a different notification noting they returned from suspension rather than made a new purchase.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <Callout type="tip" title="This workflow is optional per location">
+        <p>
+          The name includes &ldquo;Please turn this on if you&apos;d
+          like to receive emails for new purchases.&rdquo; Some studios
+          want real-time purchase notifications, others find them noisy.
+          It can be enabled or disabled per location without affecting
+          any other workflow.
+        </p>
+      </Callout>
+
+      <h2>Cross-pipeline sale marking</h2>
+
+      <WorkflowCard
+        name="01. Core_Sale Update | mark as SOLD in all pipelines"
+        purpose="When a sale happens in Core, this workflow checks every pipeline the contact might be in and marks the opportunity as the correct status. Handles Leads, STRONG Experience, and Presale pipelines in a single workflow."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/770c10f3-0f51-40f6-8708-040033497dc5"
+        steps={[
+          {
+            type: "action",
+            label: "Update appointment status",
+            detail: "Updates any pending appointment statuses.",
+          },
+          {
+            type: "condition",
+            label: "What is their Active Package?",
+            detail: "Checks if they have an active package. If empty, the workflow stops (nothing to mark as sold).",
+          },
+          {
+            type: "action",
+            label: "Add tag: sold",
+            detail: "Tags the contact as having made a purchase.",
+          },
+          {
+            type: "action",
+            label: "Add note: Active Package Updated",
+            detail: "Records what their active package changed to for audit trail.",
+          },
+          {
+            type: "condition",
+            label: "In Leads Pipeline?",
+            detail: "Checks if the contact has a Leads Pipeline opportunity and updates it to the sold/purchased status.",
+          },
+          {
+            type: "condition",
+            label: "In STRONG Experience Pipeline?",
+            detail: "Checks the STRONG Experience pipeline and updates if present.",
+          },
+          {
+            type: "condition",
+            label: "In Presale Pipeline?",
+            detail: "Checks the Presale pipeline. Routes to different statuses based on whether they purchased an intro offer, membership, or package.",
+          },
+          {
+            type: "action",
+            label: "Update opportunity in each pipeline found",
+            detail: "Marks the opportunity in each pipeline as the correct sold/purchased status.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <h2>DND and STOP reply handling</h2>
+
+      <p>
+        When a contact replies &ldquo;STOP&rdquo; to an SMS, they need
+        to be set to DND (Do Not Disturb), removed from all active
+        nurture workflows, and their pipeline opportunities cleaned up.
+        There is a separate STOP handler for each campaign because
+        each one needs to know which workflows and tags to clean up.
+      </p>
+
+      <WorkflowCard
+        name="04. STRONG Starter | Replied STOP"
+        purpose="When a contact replies STOP during the STRONG Starter lead nurture, enables SMS DND, removes them from all active nurture workflows, cleans up their Leads Pipeline opportunity, and removes nurture tags. This is one example; each campaign has its own variant."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/59d910a9-7a9a-4213-b15f-99ce1fe4b5d5"
+        steps={[
+          {
+            type: "action",
+            label: "Mark conversation as read",
+            detail: "Marks the STOP reply conversation as read so it does not clutter the inbox.",
+          },
+          {
+            type: "condition",
+            label: "Are they in the Leads Pipeline?",
+            detail: "Checks whether they have a Leads Pipeline opportunity to clean up.",
+          },
+          {
+            type: "action",
+            label: "Remove from all active nurture workflows",
+            detail: "Stops all in-progress nurture sequences.",
+          },
+          {
+            type: "action",
+            label: "Remove tag: active strong starter nurture",
+            detail: "Removes the campaign-specific nurture tag.",
+          },
+          {
+            type: "action",
+            label: "Enable SMS DND",
+            detail: "Sets the contact to Do Not Disturb for SMS. No further SMS messages will be sent by any workflow.",
+          },
+          {
+            type: "action",
+            label: "Update opportunity to unsubscribed",
+            detail: "Moves their Leads Pipeline card to the unsubscribed status.",
+          },
+          {
+            type: "wait",
+            label: "Wait",
+            detail: "Pauses before removing the pipeline opportunity.",
+          },
+          {
+            type: "action",
+            label: "Remove opportunity from Leads Pipeline",
+            detail: "Cleans up the pipeline card.",
+          },
+          {
+            type: "action",
+            label: "Remove tag: pipeline - leads pipeline",
+            detail: "Final tag cleanup.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <p>
+        Similar STOP handling workflows exist (some as drafts) for:
+      </p>
+
+      <ul>
+        <li>
+          <strong>STRONG Experience</strong>{" "} (plus variants for
+          5-for-$50 and UK locations)
+        </li>
+        <li>
+          <strong>LONG Experience</strong>
+        </li>
+        <li>
+          <strong>STRONGer Experience</strong>
+        </li>
+        <li>
+          <strong>Studio Relaunch</strong>
+        </li>
+      </ul>
+
+      <Callout type="warning" title="STOP handling must match the active campaign">
+        <p>
+          When a new campaign launches, the matching STOP handler must
+          be published alongside the lead nurture workflow. If the STOP
+          handler is still set to draft while the nurture is live,
+          contacts who reply STOP will have DND enabled (Grow handles
+          that automatically) but will not be properly cleaned up from
+          nurture workflows and pipelines.
+        </p>
+      </Callout>
+
+      <h2>Pipeline utility: Last Call Date</h2>
+
+      <WorkflowCard
+        name="Update Last Call Date Field | Intro Offer Contact Card"
+        purpose="When the studio logs a call with an intro offer contact, this workflow stamps the date on both the contact record and the pipeline opportunity. Keeps the pipeline card showing when the last outreach happened."
+        status="published"
+        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/21dfe08e-8bd9-4b29-9548-1792212b7f5b"
+        steps={[
+          {
+            type: "action",
+            label: "Add note: Call made on [date]",
+            detail: "Records the call date in the contact's notes.",
+          },
+          {
+            type: "action",
+            label: "Find opportunity in Intro Offer Pipeline",
+            detail: "Locates their pipeline card.",
+          },
+          {
+            type: "action",
+            label: "Update Last Call Date on opportunity",
+            detail: "Stamps the call date on the pipeline card so the studio can see at a glance when this contact was last contacted.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <h2>Summary</h2>
+
+      <p>
+        These system workflows are the plumbing that keeps everything
+        running. Here is a quick reference of what each category does:
+      </p>
+
+      <div className="my-4 overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>What it does</th>
+              <th>When it matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>User assignment</strong></td>
+              <td>Assigns a team member to new leads and sales</td>
+              <td>If a contact has no assigned user and tasks are not appearing</td>
+            </tr>
+            <tr>
+              <td><strong>Date stamping</strong></td>
+              <td>Stamps purchase dates for intro offers, memberships, packages, and first visit</td>
+              <td>If date fields are empty or showing the wrong date</td>
+            </tr>
+            <tr>
+              <td><strong>Internal notifications</strong></td>
+              <td>Emails the studio when purchases happen</td>
+              <td>If the studio is not receiving purchase alerts</td>
+            </tr>
+            <tr>
+              <td><strong>Cross-pipeline sale marking</strong></td>
+              <td>Marks the contact as sold in every pipeline they appear in</td>
+              <td>If a sale is not reflected in a pipeline</td>
+            </tr>
+            <tr>
+              <td><strong>DND/STOP handling</strong></td>
+              <td>Enables DND, removes from nurture, cleans up pipelines</td>
+              <td>If a contact who replied STOP is still receiving messages</td>
+            </tr>
+            <tr>
+              <td><strong>Last Call Date</strong></td>
+              <td>Stamps when the studio last called an intro offer contact</td>
+              <td>If the pipeline card shows an outdated or missing last call date</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </PageLayout>
+  )
+}
