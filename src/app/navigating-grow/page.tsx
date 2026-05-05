@@ -99,6 +99,48 @@ export default function NavigatingGrow() {
         you always have the right leads at the right stages.
       </p>
 
+      <h2>Setting up your daily bookmarks</h2>
+
+      <p>
+        Before you start using Grow each day, having the right pages
+        bookmarked in your browser saves time and removes friction. Every
+        10 to 15 seconds you save navigating is one more call you can make.
+      </p>
+
+      <p>
+        Bookmark these two pages at minimum:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Tasks</strong>{" "} (inside the Contacts section). Go to
+          Contacts, then click the Tasks tab at the top. Bookmark this page.
+          Automations create tasks for you automatically, so checking this
+          first thing means you never miss a follow-up.
+        </li>
+        <li>
+          <strong>Opportunities</strong>{" "} (your pipeline view). Bookmark the
+          Opportunities page with your default pipeline selected. This is
+          where you will spend most of your time working leads and intro
+          offer contacts.
+        </li>
+      </ul>
+
+      <p>
+        When you open your browser each morning, your two bookmarks put you
+        straight into your tasks and your pipeline without needing to click
+        through menus.
+      </p>
+
+      <Callout type="tip" title="Add them to your bookmarks bar">
+        <p>
+          Drag the tabs to your bookmarks bar so they are always visible.
+          On Mac, press <strong>Cmd+D</strong> to bookmark the current page.
+          Give each bookmark a short name like &ldquo;Tasks&rdquo; and
+          &ldquo;Pipeline&rdquo; so they fit neatly in the bar.
+        </p>
+      </Callout>
+
       <h2>Configuration sections (below the line)</h2>
 
       <h3>Marketing</h3>

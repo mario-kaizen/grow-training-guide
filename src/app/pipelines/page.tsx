@@ -1,6 +1,7 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
 import { Screenshot } from "@/components/Screenshot"
+import { StepByStep } from "@/components/StepByStep"
 
 export default function Pipelines() {
   return (
@@ -204,24 +205,83 @@ export default function Pipelines() {
         Connected&rdquo; depending on the outcome.
       </p>
 
-      <h3>Adding notes and making calls</h3>
+      <h3>The calling process</h3>
 
       <p>
-        Each opportunity card has quick action buttons:
+        Each opportunity card has quick action buttons: call, notes,
+        conversations, and tags. When you are working through your pipeline,
+        the call and notes buttons work together. Here is the process to
+        follow for every call.
+      </p>
+
+      <StepByStep
+        steps={[
+          {
+            title: "Click the call button on the card",
+            content: (
+              <p>
+                Put your headset on first. Click the call icon on the
+                opportunity card and it will start ringing immediately.
+              </p>
+            ),
+          },
+          {
+            title: "Click the notes button while it is ringing",
+            content: (
+              <p>
+                While the phone is ringing, click the notes button on the same
+                card. This opens the notes panel so you are ready to type the
+                moment the call connects.
+              </p>
+            ),
+          },
+          {
+            title: "Write your notes based on the outcome",
+            content: (
+              <p>
+                If they pick up, take notes during the conversation. If they
+                do not pick up, type &ldquo;Called, no answer&rdquo; and save
+                the note. Either way, you have a record of the attempt.
+              </p>
+            ),
+          },
+          {
+            title: "Move the card to the correct stage",
+            content: (
+              <p>
+                If they did not answer, manually drag the card to{" "}
+                <strong>Call No Answer 1</strong>, then{" "}
+                <strong>Call No Answer 2</strong>, then{" "}
+                <strong>Call No Answer 3</strong>{" "} on subsequent attempts.
+                This has to be done manually because Grow cannot distinguish
+                between a voicemail and an actual pickup.
+              </p>
+            ),
+          },
+        ]}
+      />
+
+      <Screenshot
+        src="/screenshots/pipeline-call-notes-buttons.png"
+        alt="The 01. Leads pipeline showing two opportunity cards with action buttons at the bottom of each card. On the left card, the call button (phone icon) and notes button (document icon) are highlighted with red squares, showing the two buttons you click during the calling process."
+        caption="The call button and notes button on a pipeline card. Click call first, then notes while it rings."
+      />
+
+      <Callout type="warning" title="Voicemail counts as a pickup">
+        <p>
+          When a call connects to voicemail, Grow treats it the same as
+          someone answering the phone. It starts counting the call duration
+          from the moment the voicemail greeting plays. This means there is no
+          way to automate the &ldquo;no answer&rdquo; stage movement. You need
+          to move the card manually every time someone does not pick up.
+        </p>
+      </Callout>
+
+      <p>
+        The other quick action buttons on each card:
       </p>
 
       <ul>
-        <li>
-          <strong>Call button:</strong>{" "} if the contact has a phone number,
-          you will see a call icon. Click it to initiate a call directly from
-          Grow. When working through your pipeline, put on your headset and
-          click the call button to reach out immediately.
-        </li>
-        <li>
-          <strong>Notes button:</strong>{" "} opens the notes panel for that
-          opportunity. Click this before or during a call so you can take notes
-          while the phone is ringing.
-        </li>
         <li>
           <strong>Conversations button:</strong>{" "} opens the SMS and email
           history with that contact.
@@ -291,6 +351,28 @@ export default function Pipelines() {
         the cracks.
       </p>
 
+      <h3>If your pipeline suddenly shows hundreds of contacts</h3>
+
+      <p>
+        Sometimes filters get accidentally cleared. When that happens, the
+        pipeline will show every opportunity ever created, including won, lost,
+        and abandoned cards. It can look overwhelming, but it is easy to fix.
+      </p>
+
+      <p>
+        Click <strong>Advanced Filters</strong> at the top of the pipeline.
+        Set the <strong>Status</strong> filter to <strong>Open</strong> and
+        click <strong>Apply</strong>. This hides all the closed opportunities
+        and returns the board to showing only the contacts you are actively
+        working.
+      </p>
+
+      <Screenshot
+        src="/screenshots/pipeline-advanced-filters-status.png"
+        alt="The Opportunities page with the Advanced Filters panel open on the right. The Advanced Filters button is highlighted in the toolbar. Inside the panel, the Status filter is set to 'Is any of' with 'Open' selected. The Apply button is visible at the bottom right."
+        caption="Click Advanced Filters, set Status to Open, and click Apply to restore your pipeline to showing only active contacts."
+      />
+
       <h2>The Pipelines tab</h2>
 
       <p>
@@ -308,6 +390,92 @@ export default function Pipelines() {
           &ldquo;Move to stage&rdquo; and workflow triggers like &ldquo;Stage
           changed to&rdquo; rely on exact stage names. Breaking that connection
           means contacts stop moving through the pipeline automatically.
+        </p>
+      </Callout>
+
+      <h2>Visit count timing</h2>
+
+      <p>
+        In the Intro Offer pipeline, each card shows a visit count that tells
+        you how many sessions a contact has attended. There are actually two
+        places this number appears, and they update at different times.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Where</th>
+            <th>What it shows</th>
+            <th>When it updates</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pipeline card</strong></td>
+            <td>Visit count displayed on the card in the board view</td>
+            <td>Once per day at 12:15 AM (your local time zone)</td>
+          </tr>
+          <tr>
+            <td><strong>Intro Offer Pipeline Visits</strong>{" "} (contact profile)</td>
+            <td>The custom field under Intro Offer Information on the contact record</td>
+            <td>In real time</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        If a member attends a class at 9 AM, the pipeline card will still show
+        yesterday&apos;s visit count until the overnight update runs. But if
+        you Cmd+click the card to open the full contact profile and scroll to
+        the <strong>Intro Offer Pipeline Visits</strong>{" "} field, you will
+        see the updated number immediately.
+      </p>
+
+      <Callout type="tip" title="When the numbers do not match">
+        <p>
+          If a member says they attended today but the pipeline card still
+          shows the old count, check the contact profile field instead. The
+          card will catch up after midnight. This is not a bug, it is how the
+          system processes the overnight sync from Core.
+        </p>
+      </Callout>
+
+      <h2>How contacts leave the pipeline</h2>
+
+      <p>
+        Contacts do not stay in the pipeline forever. There are a few ways a
+        card gets removed from the board.
+      </p>
+
+      <ul>
+        <li>
+          <strong>Workflow conversion:</strong>{" "} when a lead purchases an
+          intro offer, the workflow marks their leads pipeline opportunity as
+          Won and creates a new opportunity in the Intro Offer pipeline.
+        </li>
+        <li>
+          <strong>Manual removal:</strong>{" "} you can change the opportunity
+          status to Won, Lost, or Abandoned to remove a card from the active
+          board view.
+        </li>
+        <li>
+          <strong>28-day auto-cleanup:</strong>{" "} if a lead sits in the
+          Leads pipeline for 28 days without purchasing an intro offer, the
+          system automatically removes their card from the pipeline. The
+          contact stays in the database and will still receive any mass
+          marketing campaigns you send. They just no longer appear on the
+          pipeline board.
+        </li>
+      </ul>
+
+      <Callout type="tip" title="Removed does not mean deleted">
+        <p>
+          When a contact is removed from the pipeline, either automatically
+          or manually, their contact record stays in the database. You can
+          still find them in Contacts, they still appear in Smart Lists if
+          they match the criteria, and they will still receive any bulk
+          emails or SMS campaigns you send. The pipeline is a working view,
+          not the database itself.
         </p>
       </Callout>
     </PageLayout>
