@@ -160,7 +160,7 @@ export default function NewLeads() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Pauses before the next touchpoint.",
+            detail: "Spacing between automated outreach messages to avoid overwhelming the lead.",
           },
           {
             type: "condition",
@@ -235,7 +235,7 @@ export default function NewLeads() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Pauses before cleanup.",
+            detail: "Final delay before the workflow removes the lead from active nurture sequences.",
           },
           {
             type: "action",
@@ -314,7 +314,7 @@ export default function NewLeads() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Additional pause.",
+            detail: "Ensures all tags and field updates settle before the next condition check.",
           },
           {
             type: "condition",

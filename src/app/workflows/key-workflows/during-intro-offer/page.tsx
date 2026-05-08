@@ -427,7 +427,7 @@ export default function DuringIntroOffer() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Additional waiting period to see if they respond to outreach.",
+            detail: "Extended wait to see if the booking reminder or outreach prompted attendance.",
           },
           {
             type: "condition",
@@ -573,7 +573,7 @@ export default function DuringIntroOffer() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Pause after the initial upsell touchpoint.",
+            detail: "Spacing after the first membership options message before the next nudge.",
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
@@ -603,7 +603,7 @@ export default function DuringIntroOffer() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Short pause before sending the completion email.",
+            detail: "Brief delay to confirm the contact reached the visit threshold before sending the completion email.",
           },
           {
             type: "action",
@@ -613,7 +613,7 @@ export default function DuringIntroOffer() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Final pause. After this, the contact either converts to a membership (handled by the exit workflows) or their offer expires.",
+            detail: "Final window for conversion. After this, the exit workflows handle pipeline cleanup based on whether they purchased a membership.",
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
@@ -787,7 +787,7 @@ export default function DuringIntroOffer() {
           {
             type: "wait",
             label: "Wait",
-            detail: "Delay before final cleanup, keeping the Lost card visible for the studio.",
+            detail: "Keeps the Lost pipeline card visible for the studio to review before removing it.",
           },
           {
             type: "action",
