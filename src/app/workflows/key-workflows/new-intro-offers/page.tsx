@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
+import { ConnectionDiagram } from "@/components/ConnectionDiagram"
 import { WorkflowCard } from "@/components/WorkflowCard"
 
 export default function NewIntroOffers() {
@@ -31,36 +32,25 @@ export default function NewIntroOffers() {
         day-by-day tracking.
       </p>
 
-      <div className="my-6 p-5 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm font-[family-name:var(--font-kessel)] font-black uppercase tracking-wide text-black mt-0 mb-3">
-          Purchase flow
-        </p>
-        <div className="text-sm text-gray-700 space-y-1 font-mono">
-          <p className="m-0">
-            <strong>Core purchase</strong> {" "}
-            Active Package syncs to Grow
-          </p>
-          <p className="m-0 pl-6">
-            Intro Offer Status Update detects the change
-          </p>
-          <p className="m-0 pl-6">
-            Routes to correct Purchase Confirmation workflow
-          </p>
-          <p className="m-0 pl-6">
-            Sets up pipeline card, tags, custom fields
-          </p>
-          <p className="m-0 pl-6">
-            Sends welcome email + creates call task
-          </p>
-          <p className="m-0 pl-6">
-            Enrolls in attendance check workflow
-          </p>
-          <p className="m-0 mt-2 pt-2 border-t border-gray-300">
-            If they came from a lead ad: also moves them to
-            &ldquo;Purchased&rdquo; in the Leads Pipeline
-          </p>
-        </div>
-      </div>
+      <ConnectionDiagram
+        nodes={[
+          { id: "core", label: "Core Purchase", type: "source", description: "Active Package syncs to Grow" },
+          { id: "wf-status", label: "01. Intro Offer Status Update", type: "workflow", description: "Central router: detects purchase, upgrade, or expiry" },
+          { id: "wf-purchase", label: "01. Purchase Confirmation + Intro Nurture", type: "workflow", description: "Welcome email, call task, brand story" },
+          { id: "wf-tag", label: "01. Add tag: pipeline - intro offer", type: "workflow", description: "Pipeline identification" },
+          { id: "wf-leads", label: "04. Move to Purchased in Leads", type: "workflow", description: "Cleans up Leads Pipeline if they came from an ad" },
+          { id: "pipeline", label: "Intro Offer Pipeline card created", type: "outcome", description: "Custom fields set, day-by-day tracking begins" },
+          { id: "handoff", label: "During Intro Offer workflows", type: "handoff", description: "Attendance check, daily progression" },
+        ]}
+        connections={[
+          { from: "core", to: "wf-status", label: "Active Package field changes" },
+          { from: "wf-status", to: "wf-purchase" },
+          { from: "wf-status", to: "wf-tag" },
+          { from: "wf-status", to: "wf-leads" },
+          { from: "wf-purchase", to: "pipeline" },
+          { from: "pipeline", to: "handoff" },
+        ]}
+      />
 
       <h2>Section 1: Permanent infrastructure</h2>
 
@@ -369,8 +359,8 @@ export default function NewIntroOffers() {
 
       <WorkflowCard
         name="01. STRONG Experience | Purchase Confirmation + Intro Nurture"
-        purpose="Welcome sequence for the STRONG Experience offer (a different campaign variant). Follows the same pattern as the STRONG Intro Offer workflow but with STRONG Experience specific content and field values."
-        status="published"
+        purpose="[Retired: predecessor to STRONG Intro Offer, kept for reference.] Welcome sequence for the STRONG Experience offer (a different campaign variant). Follows the same pattern as the STRONG Intro Offer workflow but with STRONG Experience specific content and field values."
+        status="retired"
         workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/9c0d9c09-2c0a-4cdd-8a71-d38e80d24798"
         steps={[
           {
@@ -478,6 +468,19 @@ export default function NewIntroOffers() {
           Update, pipeline tagging, Leads Pipeline cleanup) do not
           change. This means only one or two workflows need to be
           swapped per campaign change, not the entire system.
+        </p>
+      </Callout>
+
+      <Callout type="warning" title="Common issues at this stage">
+        <p>
+          If a purchase is not being detected or the welcome email is not
+          sending, check the{" "}
+          <a href="/troubleshooting/sync-gaps">
+            Core to Grow Sync Gaps
+          </a>{" "}
+          troubleshooting page. The most common cause is a delay in the
+          Core to Grow sync updating the Active Package field. The Status
+          Update workflow cannot fire until that field changes.
         </p>
       </Callout>
 
