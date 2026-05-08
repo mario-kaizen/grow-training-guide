@@ -501,6 +501,171 @@ export default function SystemWorkflows() {
         settings={{ allowReentry: true, stopOnResponse: false }}
       />
 
+      <h2>Email and SMS unsubscribe handling</h2>
+
+      <p>
+        Three workflows handle contacts who unsubscribe from email or
+        SMS. These are separate from the campaign-specific STOP handlers
+        (covered above) because they handle global unsubscribe requests
+        that apply across all messaging.
+      </p>
+
+      <WorkflowCard
+        name="X Email Unsubscribe"
+        purpose="When a contact clicks the unsubscribe link in any email, enables email DND so no further marketing emails are sent. Marks the conversation as read."
+        status="published"
+        steps={[
+          {
+            type: "action",
+            label: "Enable Email DND",
+            detail: "Sets the contact to Do Not Disturb for email. All future marketing emails are suppressed.",
+          },
+          {
+            type: "action",
+            label: "Mark conversation as read",
+            detail: "Prevents the unsubscribe notification from cluttering the inbox.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="X.1 Email Resubscribe"
+        purpose="When a contact re-subscribes to emails (via a resubscribe form or manual action), removes the email DND flag so they can receive marketing emails again."
+        status="published"
+        steps={[
+          {
+            type: "action",
+            label: "Remove Email DND",
+            detail: "Clears the Do Not Disturb flag for email, re-enabling marketing email delivery.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="X.2 SMS Unsubscribe"
+        purpose="Handles global SMS opt-outs that are not caught by the campaign-specific STOP handlers. Enables SMS DND across the board."
+        status="published"
+        steps={[
+          {
+            type: "action",
+            label: "Enable SMS DND",
+            detail: "Sets the contact to Do Not Disturb for SMS. All future SMS messages are suppressed.",
+          },
+          {
+            type: "action",
+            label: "Mark conversation as read",
+            detail: "Prevents the unsubscribe reply from cluttering the inbox.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <h2>Call metrics tracking</h2>
+
+      <p>
+        Four workflows track outgoing call activity for studio
+        reporting. They increment counters when calls are made, reset
+        the counters on weekly and monthly schedules, and add notes when
+        a called contact converts.
+      </p>
+
+      <WorkflowCard
+        name="01. Call Metrics | Add 1 to all fields when an outgoing call is made"
+        purpose="When the studio makes an outgoing call, increments the daily, weekly, and monthly call counters by 1. Used for call activity reporting and team performance tracking."
+        status="published"
+        steps={[
+          {
+            type: "action",
+            label: "Math operation: add 1 to daily calls",
+            detail: "Increments the daily call counter.",
+          },
+          {
+            type: "action",
+            label: "Math operation: add 1 to weekly calls",
+            detail: "Increments the weekly call counter.",
+          },
+          {
+            type: "action",
+            label: "Math operation: add 1 to monthly calls",
+            detail: "Increments the monthly call counter.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="02. Call Metrics | Monthly Reset"
+        purpose="At the end of each month, resets the monthly call counter to zero."
+        status="published"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait until end of month",
+            detail: "Pauses until the last day of the current month.",
+          },
+          {
+            type: "action",
+            label: "Clear monthly call counter",
+            detail: "Sets the monthly call field to empty for the new month.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="03. Call Metrics | Weekly Reset"
+        purpose="At the end of each week, resets the weekly call counter to zero."
+        status="published"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait until Sunday",
+            detail: "Pauses until end of the current week.",
+          },
+          {
+            type: "action",
+            label: "Clear weekly call counter",
+            detail: "Sets the weekly call field to empty for the new week.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="04. Call Metrics | Add Notes when they convert"
+        purpose="When a contact who was called subsequently purchases, adds a note to the contact record linking the call activity to the conversion."
+        status="published"
+        steps={[
+          {
+            type: "condition",
+            label: "Did their Active Package change?",
+            detail: "Detects that a purchase happened.",
+          },
+          {
+            type: "action",
+            label: "Add note: Call converted to purchase",
+            detail: "Records the conversion for call performance reporting.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <Callout type="warning" title="Common issues at this stage">
+        <p>
+          Date stamps showing the wrong date after a contact merge, or
+          duplicate pipeline cards appearing after a manual data cleanup?
+          Check the{" "}
+          <a href="/troubleshooting/contact-duplicates">
+            Contact Duplicates & Merges
+          </a>{" "}
+          troubleshooting page. System workflows fire on field changes,
+          and merging two contacts can trigger multiple field updates at
+          once.
+        </p>
+      </Callout>
+
       <h2>Summary</h2>
 
       <p>
@@ -547,6 +712,16 @@ export default function SystemWorkflows() {
               <td><strong>Last Call Date</strong></td>
               <td>Stamps when the studio last called an intro offer contact</td>
               <td>If the pipeline card shows an outdated or missing last call date</td>
+            </tr>
+            <tr>
+              <td><strong>Email/SMS unsubscribe</strong></td>
+              <td>Enables DND when contacts unsubscribe from email or SMS globally</td>
+              <td>If a contact who unsubscribed is still receiving marketing messages</td>
+            </tr>
+            <tr>
+              <td><strong>Call metrics</strong></td>
+              <td>Tracks outgoing calls, resets weekly and monthly counters, notes conversions</td>
+              <td>If call activity reports show zero or the counters are not resetting</td>
             </tr>
           </tbody>
         </table>
