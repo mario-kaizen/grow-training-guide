@@ -75,53 +75,75 @@ export default function NewIntroOffers() {
           {
             type: "condition",
             label: "What triggered this? Contact Created with Account Created tag, or something else?",
-            detail: "Determines whether this contact just arrived from Core (new account) or an existing contact had their package updated. This affects which branch handles them.",
+            detail: "Determines whether this contact just arrived from Core (new account) or an existing contact had their package updated.",
           },
           {
             type: "condition",
             label: "What is their Active Package Category?",
-            detail: "The main routing check. Branches for: Intro Offer (new purchase or attendance update), Memberships or Packages (upgraded), or Empty (expired or removed).",
-          },
-          {
-            type: "action",
-            label: "Update custom fields: Intro Offer Name, Purchase Date, Pipeline Status, Pipeline Day",
-            detail: "Sets four key fields that the day-by-day workflows rely on. Intro Offer Name stores which package they bought. Purchase Date stamps today. Pipeline Status is set to 'Pre' (pre-first-visit). Pipeline Day starts at 0.",
-          },
-          {
-            type: "action",
-            label: "Add note: Intro Offer Purchase Information",
-            detail: "Writes a note to the contact record with their Active Package, Purchase Date, and other fields for audit trail.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity in Intro Offer Pipeline",
-            detail: "Creates or updates their Intro Offer Pipeline card, placing them in the correct stage.",
-          },
-          {
-            type: "action",
-            label: "Add tag: pipeline - intro offer",
-            detail: "Tags the contact so other workflows can identify them as being in the intro offer system.",
-          },
-          {
-            type: "link",
-            label: "Add to False Starter workflow",
-            detail: "Enrolls them in the False Starter Check, which will flag them if they do not attend within a set period.",
-            linkTo: "/workflows/key-workflows/during-intro-offer",
-          },
-          {
-            type: "condition",
-            label: "Membership/Package branch: Do they have a membership now?",
-            detail: "If the contact upgrades to a membership or package during their intro offer, this branch detects it, finds their pipeline opportunity, marks it as won, removes daily workflow tags, and cleans up.",
-          },
-          {
-            type: "action",
-            label: "Remove from daily workflows + cleanup",
-            detail: "On the membership branch: removes the contact from all daily Day X workflows, updates the pipeline card, waits 14 days, then removes the opportunity and the 'pipeline - intro offer' tag.",
-          },
-          {
-            type: "condition",
-            label: "Empty/Expired branch: Is their Active Package empty?",
-            detail: "If the package field is empty, the intro offer has expired or been removed. The workflow finds the pipeline opportunity, creates a follow-up task, removes daily workflows, and cleans up after a waiting period.",
+            detail: "The main routing check. Three branches based on what the contact currently has.",
+            branches: [
+              {
+                label: "Intro Offer",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update custom fields",
+                    detail: "Sets Intro Offer Name, Purchase Date, Pipeline Status = Pre, Pipeline Day = 0.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add note: Intro Offer Purchase Information",
+                    detail: "Writes a note with Active Package, Purchase Date, and tracking fields.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Intro Offer Pipeline",
+                    detail: "Creates or updates their pipeline card in the correct stage.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add tag: pipeline - intro offer",
+                    detail: "Tags the contact for pipeline identification.",
+                  },
+                  {
+                    type: "link",
+                    label: "Add to False Starter workflow",
+                    detail: "Enrolls them in the False Starter Check.",
+                    linkTo: "/workflows/key-workflows/during-intro-offer",
+                  },
+                ],
+              },
+              {
+                label: "Membership / Package",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Find opportunity, mark as Won",
+                    detail: "Locates their Intro Offer Pipeline card and marks it as won.",
+                  },
+                  {
+                    type: "action",
+                    label: "Remove from daily workflows + cleanup",
+                    detail: "Removes from all Day X workflows, waits 14 days, then removes the opportunity and pipeline tag.",
+                  },
+                ],
+              },
+              {
+                label: "Empty (Expired)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Create follow-up task",
+                    detail: "Creates a task for the studio to follow up with the expired contact.",
+                  },
+                  {
+                    type: "action",
+                    label: "Clean up pipeline card and tags",
+                    detail: "Removes from daily workflows, updates pipeline status, removes opportunity after delay.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}

@@ -290,27 +290,44 @@ export default function SystemWorkflows() {
           {
             type: "condition",
             label: "What is their Active Package Category?",
-            detail: "Routes to different notification emails for intro offers vs memberships/packages.",
-          },
-          {
-            type: "action",
-            label: "Internal notification: Intro Offer purchase",
-            detail: "Sends an email to the studio when someone purchases an intro offer.",
-          },
-          {
-            type: "condition",
-            label: "Do they have the 'recently suspended' tag?",
-            detail: "For memberships, checks whether this is a genuinely new purchase or a return from suspension. Suspended members returning do not need a 'new purchase' notification.",
-          },
-          {
-            type: "action",
-            label: "Internal notification: Membership/Package purchase",
-            detail: "Sends an email to the studio for new membership or package purchases (excluding returns from suspension).",
-          },
-          {
-            type: "action",
-            label: "Internal notification: Return from suspension",
-            detail: "If they have the 'recently suspended' tag, sends a different notification noting they returned from suspension rather than made a new purchase.",
+            detail: "Routes to different notification emails based on what was purchased.",
+            branches: [
+              {
+                label: "Intro Offer",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Internal notification: Intro Offer purchase",
+                    detail: "Sends an email to the studio when someone purchases an intro offer.",
+                  },
+                ],
+              },
+              {
+                label: "Membership / Package (new)",
+                steps: [
+                  {
+                    type: "condition",
+                    label: "Do they have the 'recently suspended' tag?",
+                    detail: "Checks whether this is a new purchase or a return from suspension.",
+                  },
+                  {
+                    type: "action",
+                    label: "Internal notification: New purchase",
+                    detail: "Sends a new purchase notification (excluding returns from suspension).",
+                  },
+                ],
+              },
+              {
+                label: "Return from suspension",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Internal notification: Return from suspension",
+                    detail: "Sends a different notification noting they returned from suspension.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}

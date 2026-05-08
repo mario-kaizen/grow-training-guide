@@ -303,22 +303,34 @@ export default function MembershipJourney() {
           {
             type: "condition",
             label: "Is their Active Package empty?",
-            detail: "Routes to different notifications for leads vs active members/package holders.",
-          },
-          {
-            type: "action",
-            label: "Internal notification: Email to Studio (for leads)",
-            detail: "If they are a lead with no package, sends a simpler notification. The studio may choose to send a birthday offer.",
-          },
-          {
-            type: "action",
-            label: "Add task: Birthday Preparation",
-            detail: "For active members and package holders, creates a task for the studio to prepare a birthday acknowledgment.",
-          },
-          {
-            type: "action",
-            label: "Internal notification: Email to Studio (for members)",
-            detail: "Sends the full birthday notification for members, including their details and membership status.",
+            detail: "Routes to different notifications for leads vs active members.",
+            branches: [
+              {
+                label: "Lead (no package)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Internal notification: Email to Studio",
+                    detail: "Sends a simpler birthday notification. The studio may choose to send a birthday offer.",
+                  },
+                ],
+              },
+              {
+                label: "Member / Package holder",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Add task: Birthday Preparation",
+                    detail: "Creates a task for the studio to prepare a birthday acknowledgment.",
+                  },
+                  {
+                    type: "action",
+                    label: "Internal notification: Email to Studio",
+                    detail: "Sends the full birthday notification with member details and status.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
@@ -356,32 +368,49 @@ export default function MembershipJourney() {
           {
             type: "wait",
             label: "Wait for status change",
-            detail: "Waits for their Location Status to change again (either back to active or to inactive).",
+            detail: "Waits for their Location Status to change again.",
           },
           {
             type: "condition",
             label: "What did their Location Status change to?",
-            detail: "Routes based on outcome: 'activePackage' means they returned from suspension, 'inactive' means they cancelled during suspension.",
-          },
-          {
-            type: "action",
-            label: "Remove tag: suspended membership",
-            detail: "Cleans up the suspension tag.",
-          },
-          {
-            type: "action",
-            label: "Add tag: recently suspended",
-            detail: "Temporarily tags them as recently suspended. This prevents the 'Date Membership Purchased' workflow from re-stamping the purchase date when they come back from suspension.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Short pause.",
-          },
-          {
-            type: "action",
-            label: "Remove tag: recently suspended",
-            detail: "Removes the temporary tag after the window has passed.",
+            detail: "Routes based on outcome after suspension ends.",
+            branches: [
+              {
+                label: "Returned to Active",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Remove tag: suspended membership",
+                    detail: "Cleans up the suspension tag.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add tag: recently suspended",
+                    detail: "Prevents the purchase date workflow from re-stamping.",
+                  },
+                  {
+                    type: "wait",
+                    label: "Wait",
+                    detail: "Short pause for the temporary tag window.",
+                  },
+                  {
+                    type: "action",
+                    label: "Remove tag: recently suspended",
+                    detail: "Removes the temporary tag after the window has passed.",
+                  },
+                ],
+              },
+              {
+                label: "Went Inactive",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Remove tag: suspended membership",
+                    detail: "Cleans up the suspension tag.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
