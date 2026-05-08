@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
+import { ConnectionDiagram } from "@/components/ConnectionDiagram"
 import { WorkflowCard } from "@/components/WorkflowCard"
 
 export default function DuringIntroOffer() {
@@ -20,6 +21,32 @@ export default function DuringIntroOffer() {
         nudges, membership upsell, and the three possible exits: Won
         (converted to membership), Abandoned/Lost, or Expired.
       </p>
+
+      <ConnectionDiagram
+        nodes={[
+          { id: "setup", label: "Contact set up by purchase workflows", type: "source" },
+          { id: "daily", label: "Day 1 → Day 15 progression", type: "workflow", description: "15 workflows, one per day" },
+          { id: "visits", label: "02. Visits Update", type: "workflow", description: "Tracks attendance, updates pipeline" },
+          { id: "false", label: "03. False Starter Check", type: "workflow", description: "Flags contacts with no visits" },
+          { id: "attend", label: "03. Attendance Check", type: "workflow", description: "3-day SMS, 7-day call task" },
+          { id: "upsell1", label: "04. 3 visits OR Day 8", type: "workflow", description: "Membership options email" },
+          { id: "upsell2", label: "05. 5 visits OR Day 14", type: "workflow", description: "Intro offer complete email" },
+          { id: "won", label: "Won", type: "outcome", description: "Purchased membership" },
+          { id: "lost", label: "Lost / Abandoned", type: "outcome", description: "Disengaged" },
+          { id: "expired", label: "Expired", type: "outcome", description: "Offer period ended" },
+        ]}
+        connections={[
+          { from: "setup", to: "daily" },
+          { from: "setup", to: "visits" },
+          { from: "setup", to: "false" },
+          { from: "setup", to: "attend" },
+          { from: "daily", to: "upsell1", label: "Reaches Day 8 or 3 visits" },
+          { from: "upsell1", to: "upsell2", label: "Reaches Day 14 or 5 visits" },
+          { from: "upsell2", to: "won" },
+          { from: "upsell2", to: "lost" },
+          { from: "upsell2", to: "expired" },
+        ]}
+      />
 
       <h2>The day-by-day pipeline progression</h2>
 
@@ -228,6 +255,35 @@ export default function DuringIntroOffer() {
         </table>
       </div>
 
+      <WorkflowCard
+        name="Day 15"
+        purpose="The final day of the intro offer pipeline progression. Performs the end-of-journey check: if the contact has a membership, marks the pipeline as won. If their intro offer expired, updates the pipeline status to reflect expiry and creates a follow-up task."
+        status="published"
+        steps={[
+          {
+            type: "action",
+            label: "Update field: Intro Offer Pipeline Day = 15",
+            detail: "Stamps the final day number on the contact record.",
+          },
+          {
+            type: "action",
+            label: "Remove from all other daily workflows",
+            detail: "Final cleanup of all Day X workflow enrollments.",
+          },
+          {
+            type: "condition",
+            label: "Do they have Memberships or Packages?",
+            detail: "Checks whether the contact converted during their intro offer period.",
+          },
+          {
+            type: "action",
+            label: "Update pipeline status based on outcome",
+            detail: "If they have a membership: mark as Won. If their intro offer expired: update pipeline to reflect expiry and create a follow-up task for the studio.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
       <h2>Visit tracking</h2>
 
       <p>
@@ -282,6 +338,30 @@ export default function DuringIntroOffer() {
             type: "action",
             label: "Math operation: recalculate visits remaining",
             detail: "Recalculates how many visits are left in the intro offer package.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="02. STRONG Intro Offer | First Class Complete and Halfway SMS"
+        purpose="Sends timed check-in messages during the intro offer. After the contact completes their first class, sends a congratulations SMS. At the halfway point of their package, sends a progress check-in SMS encouraging them to keep booking."
+        status="published"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "What is their Intro Offer Pipeline Visits count?",
+            detail: "Routes based on visit count to determine which message to send: first class complete or halfway check-in.",
+          },
+          {
+            type: "action",
+            label: "Send SMS: First class or halfway check-in",
+            detail: "Sends the appropriate message based on where they are in their intro offer journey.",
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
@@ -712,6 +792,63 @@ export default function DuringIntroOffer() {
         </p>
       </Callout>
 
+      <h3>Pipeline stage verification</h3>
+
+      <p>
+        Two safety-net workflows fire when a pipeline card is manually
+        moved to the Expired or Memberships columns. They verify the
+        move is correct by checking the contact&apos;s actual data
+        before confirming the status change.
+      </p>
+
+      <WorkflowCard
+        name="08. Intro Offer Pipeline | When Moved to Expired"
+        purpose="Safety check when a contact is moved to the Expired column (manually or by another workflow). Verifies they genuinely do not have an active intro offer or membership before confirming the pipeline status."
+        status="published"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Do they actually have an empty Active Package?",
+            detail: "Confirms the expiry is real. If they still have an active package, the move was incorrect.",
+          },
+          {
+            type: "action",
+            label: "Update pipeline status or revert",
+            detail: "If confirmed expired: updates the pipeline card status. If they still have an active package: flags for review.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="09. Intro Offer Pipeline | When Moved to Memberships"
+        purpose="Safety check when a contact is moved to the Memberships column. Verifies they actually have an active membership or package before confirming the pipeline status change."
+        status="published"
+        steps={[
+          {
+            type: "wait",
+            label: "Wait (failsafe)",
+            detail: "Short pause for sync.",
+          },
+          {
+            type: "condition",
+            label: "Do they have Memberships or Packages in their Active Package Category?",
+            detail: "Confirms they actually upgraded. If not, the move was premature or incorrect.",
+          },
+          {
+            type: "action",
+            label: "Confirm or revert pipeline status",
+            detail: "If they have a membership: confirms the Won status. If not: reverts and flags for the studio to investigate.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
       <h2>How all the pieces connect</h2>
 
       <div className="my-6 p-5 bg-gray-50 rounded-lg border border-gray-200">
@@ -753,6 +890,19 @@ export default function DuringIntroOffer() {
           </p>
         </div>
       </div>
+
+      <Callout type="warning" title="Common issues at this stage">
+        <p>
+          Pipeline showing the wrong day, visit counter higher than actual
+          attendance, or a contact stuck in the wrong column? Check the{" "}
+          <a href="/troubleshooting/pipeline-inaccuracy">
+            Pipeline Inaccuracy
+          </a>{" "}
+          troubleshooting page. This is the most common category of
+          support tickets (~40%), usually caused by sync timing between
+          Core attendance data and Grow custom fields.
+        </p>
+      </Callout>
 
       <h2>What the contact experiences</h2>
 
