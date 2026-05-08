@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
+import { ConnectionDiagram } from "@/components/ConnectionDiagram"
 import { WorkflowCard } from "@/components/WorkflowCard"
 
 export default function NewLeads() {
@@ -52,28 +53,29 @@ export default function NewLeads() {
         another workflow using an &ldquo;Add to Workflow&rdquo; action.
       </p>
 
-      <div className="my-6 p-5 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm font-[family-name:var(--font-kessel)] font-black uppercase tracking-wide text-black mt-0 mb-3">
-          Workflow flow
-        </p>
-        <div className="text-sm text-gray-700 space-y-1 font-mono">
-          <p className="m-0">
-            <strong>Website Form</strong> → Website Submission workflow
-          </p>
-          <p className="m-0">
-            <strong>Facebook Ad</strong> → STRONG Intro Offer | New Lead Workflow
-          </p>
-          <p className="m-0 mt-2 pt-2 border-t border-gray-300">
-            Both add to Leads Pipeline → lead follow-up begins
-          </p>
-          <p className="m-0">
-            If the lead books a class → First Time Booking SMS
-          </p>
-          <p className="m-0">
-            If the lead completes a class → First Visit Complete Check-in
-          </p>
-        </div>
-      </div>
+      <ConnectionDiagram
+        nodes={[
+          { id: "website", label: "Website Enquiry Form", type: "source" },
+          { id: "facebook", label: "Facebook / Instagram Lead Ad", type: "source" },
+          { id: "core", label: "Core Account Created", type: "source" },
+          { id: "wf-website", label: "01. Website Submission", type: "workflow", description: "Send notifications, add to Lead Pipeline" },
+          { id: "wf-newlead", label: "01. STRONG Intro Offer | New Lead Workflow", type: "workflow", description: "Multi-day nurture sequence" },
+          { id: "wf-status", label: "01. Intro Offer Status Update", type: "workflow", description: "Routes by account created tag" },
+          { id: "pipeline", label: "Lead in Pipeline", type: "outcome", description: "Contact appears on Leads board for follow-up" },
+          { id: "wf-booking", label: "02. First Time Booking SMS", type: "handoff", description: "Sends when lead books first class" },
+          { id: "wf-visit", label: "03. First Visit Complete Check-in", type: "handoff", description: "Sends after first class attended" },
+        ]}
+        connections={[
+          { from: "website", to: "wf-website" },
+          { from: "facebook", to: "wf-newlead" },
+          { from: "core", to: "wf-status" },
+          { from: "wf-website", to: "pipeline" },
+          { from: "wf-newlead", to: "pipeline" },
+          { from: "wf-status", to: "pipeline" },
+          { from: "pipeline", to: "wf-booking", label: "Lead books a class" },
+          { from: "pipeline", to: "wf-visit", label: "Lead completes a class" },
+        ]}
+      />
 
       <h2>The workflows</h2>
 
@@ -372,6 +374,20 @@ export default function NewLeads() {
         ]}
         settings={{ allowReentry: false, stopOnResponse: false }}
       />
+
+      <Callout type="warning" title="Common issues at this stage">
+        <p>
+          If a lead is not receiving their welcome SMS or the studio is not
+          getting notified, check the{" "}
+          <a href="/troubleshooting/workflow-timing">
+            Workflow Timing & Tasks
+          </a>{" "}
+          troubleshooting page. Common causes: the form trigger is not
+          mapped to the correct form, the assigned user is not set up for
+          the location, or the workflow fired but the SMS failed due to
+          an invalid phone number.
+        </p>
+      </Callout>
 
       <h2>What the lead experiences</h2>
 
