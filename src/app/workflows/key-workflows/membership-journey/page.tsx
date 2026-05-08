@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
+import { ConnectionDiagram } from "@/components/ConnectionDiagram"
 import { WorkflowCard } from "@/components/WorkflowCard"
 
 export default function MembershipJourney() {
@@ -17,6 +18,26 @@ export default function MembershipJourney() {
         attendance milestones, notifying the studio on birthdays, and
         managing lifecycle changes like suspensions and inactivity.
       </p>
+
+      <ConnectionDiagram
+        nodes={[
+          { id: "converted", label: "Converted from intro offer", type: "source" },
+          { id: "nurture", label: "01. 60 Day Member Journey", type: "workflow", description: "8 emails + 2 SMS over 60 days" },
+          { id: "milestones", label: "02. Attendance Milestones", type: "workflow", description: "Notifications at 47, 97, 197, 497, 997" },
+          { id: "birthday", label: "03. Birthday Notification", type: "workflow", description: "Studio notified on member birthdays" },
+          { id: "suspend", label: "05. Suspensions", type: "workflow", description: "Tracks suspension and return" },
+          { id: "inactive", label: "06. Location Status = inactive", type: "workflow", description: "Removes all active tags on cancellation" },
+          { id: "checkins", label: "07/10. Weekly + Monthly Check-ins", type: "workflow", description: "Attendance counters for reporting" },
+        ]}
+        connections={[
+          { from: "converted", to: "nurture", label: "Membership purchase detected" },
+          { from: "converted", to: "milestones" },
+          { from: "converted", to: "birthday" },
+          { from: "converted", to: "suspend" },
+          { from: "converted", to: "inactive" },
+          { from: "converted", to: "checkins" },
+        ]}
+      />
 
       <h2>The 60-day member nurture</h2>
 
@@ -548,6 +569,68 @@ export default function MembershipJourney() {
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}
       />
+
+      <WorkflowCard
+        name="08. Weekly Check-ins | When Weekly Check-ins changes, wait till Sunday and empty field"
+        purpose="Resets the weekly check-in counter to zero every Sunday. Watches the weekly check-in field for changes, waits until the end of the week, then clears the field so it starts fresh on Monday."
+        status="published"
+        steps={[
+          {
+            type: "condition",
+            label: "Has the weekly check-in field changed?",
+            detail: "Triggered when the counter is updated by the attendance workflow.",
+          },
+          {
+            type: "wait",
+            label: "Wait until Sunday",
+            detail: "Pauses until the end of the current week.",
+          },
+          {
+            type: "action",
+            label: "Clear weekly check-in field",
+            detail: "Sets the field to empty so the counter starts at 0 for the new week.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <WorkflowCard
+        name="11. Monthly Check-ins | When Monthly Check-ins changes, wait till end of month and empty field"
+        purpose="Resets the monthly check-in counter to zero at the end of each month. Same pattern as the weekly reset but on a monthly cycle."
+        status="published"
+        steps={[
+          {
+            type: "condition",
+            label: "Has the monthly check-in field changed?",
+            detail: "Triggered when the counter is updated by the attendance workflow.",
+          },
+          {
+            type: "wait",
+            label: "Wait until end of month",
+            detail: "Pauses until the last day of the current month.",
+          },
+          {
+            type: "action",
+            label: "Clear monthly check-in field",
+            detail: "Sets the field to empty so the counter starts at 0 for the new month.",
+          },
+        ]}
+        settings={{ allowReentry: true, stopOnResponse: false }}
+      />
+
+      <Callout type="warning" title="Common issues at this stage">
+        <p>
+          If the 60-day emails are not sending or a member who replied
+          STOP is still receiving messages, check the{" "}
+          <a href="/troubleshooting/email-notifications">
+            Email & Notification Issues
+          </a>{" "}
+          troubleshooting page. Common causes: the member already has the
+          &ldquo;60 day member nurture&rdquo; tag from a previous
+          membership, or DND was enabled but the workflow had already
+          queued the next message before DND took effect.
+        </p>
+      </Callout>
 
       <h2>What the member experiences</h2>
 
