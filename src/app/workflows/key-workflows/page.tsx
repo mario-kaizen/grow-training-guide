@@ -1,4 +1,5 @@
 import { PageLayout } from "@/components/PageLayout"
+import { JourneyMap } from "@/components/JourneyMap"
 
 export default function KeyWorkflows() {
   return (
@@ -20,6 +21,8 @@ export default function KeyWorkflows() {
         ones that directly affect your contacts. They are organized by
         where a contact is in their journey with STRONG:
       </p>
+
+      <JourneyMap />
 
       <table>
         <thead>
