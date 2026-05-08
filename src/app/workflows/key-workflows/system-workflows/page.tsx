@@ -373,23 +373,45 @@ export default function SystemWorkflows() {
           },
           {
             type: "condition",
-            label: "In Leads Pipeline?",
-            detail: "Checks if the contact has a Leads Pipeline opportunity and updates it to the sold/purchased status.",
-          },
-          {
-            type: "condition",
-            label: "In STRONG Experience Pipeline?",
-            detail: "Checks the STRONG Experience pipeline and updates if present.",
-          },
-          {
-            type: "condition",
-            label: "In Presale Pipeline?",
-            detail: "Checks the Presale pipeline. Routes to different statuses based on whether they purchased an intro offer, membership, or package.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity in each pipeline found",
-            detail: "Marks the opportunity in each pipeline as the correct sold/purchased status.",
+            label: "Which pipelines have an opportunity for this contact?",
+            detail: "Checks each pipeline sequentially and updates the opportunity status in each one found.",
+            branches: [
+              {
+                label: "Leads Pipeline",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update opportunity to Purchased",
+                    detail: "Marks the Leads Pipeline opportunity as purchased/sold.",
+                  },
+                ],
+              },
+              {
+                label: "STRONG Experience Pipeline",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update opportunity to Purchased",
+                    detail: "Marks the STRONG Experience Pipeline opportunity as purchased/sold.",
+                  },
+                ],
+              },
+              {
+                label: "Presale Pipeline",
+                steps: [
+                  {
+                    type: "condition",
+                    label: "What is their Active Package Category?",
+                    detail: "Routes to different statuses based on what they purchased.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity to Intro Offer / Membership / Package",
+                    detail: "Sets the Presale opportunity to the correct status matching what was purchased.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}

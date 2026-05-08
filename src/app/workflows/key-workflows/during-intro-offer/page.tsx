@@ -317,27 +317,49 @@ export default function DuringIntroOffer() {
           {
             type: "condition",
             label: "What is their Intro Offer Pipeline Status?",
-            detail: "Routes based on current status: 'Pre' (first visit, needs to be transitioned to Active) or 'Active' (subsequent visits, just update the count).",
-          },
-          {
-            type: "action",
-            label: "Update fields: Pipeline Visits, Days Remaining, Pipeline Status",
-            detail: "Updates the visit count, recalculates days remaining, and if this is their first visit, changes Pipeline Status from 'Pre' to 'Active'.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity in Intro Offer Pipeline",
-            detail: "Updates the pipeline card with the new visit count so the studio can see progress visually.",
-          },
-          {
-            type: "action",
-            label: "Math operation: increment Intro Offer Pipeline Visits",
-            detail: "Adds 1 to the pipeline visits counter.",
-          },
-          {
-            type: "action",
-            label: "Math operation: recalculate visits remaining",
-            detail: "Recalculates how many visits are left in the intro offer package.",
+            detail: "Routes based on whether this is their first visit or a subsequent visit.",
+            branches: [
+              {
+                label: "Pre (first visit)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update Pipeline Status to Active",
+                    detail: "Transitions from Pre to Active, marking that they have now attended their first class.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update fields: Pipeline Visits = 1, recalculate Days Remaining",
+                    detail: "Sets the initial visit count and calculates remaining visits in the package.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Intro Offer Pipeline",
+                    detail: "Updates the pipeline card to reflect the Active status and first visit.",
+                  },
+                ],
+              },
+              {
+                label: "Active (subsequent visit)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Math operation: increment Pipeline Visits by 1",
+                    detail: "Adds 1 to the running visit counter.",
+                  },
+                  {
+                    type: "action",
+                    label: "Math operation: recalculate Visits Remaining",
+                    detail: "Updates the remaining visits calculation.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Intro Offer Pipeline",
+                    detail: "Updates the pipeline card with the new visit count.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: true, stopOnResponse: false }}

@@ -359,17 +359,69 @@ export default function NewLeads() {
           {
             type: "condition",
             label: "What is their Intro Offer Active Package?",
-            detail: "Routes to different SMS wording based on the package type: Intro to STRONG, STRONG Experience, STRONG Starter, or STRONG Intro Offer.",
-          },
-          {
-            type: "action",
-            label: "Add tag: sms_sent_post first visit",
-            detail: "Marks that this SMS has been sent.",
-          },
-          {
-            type: "action",
-            label: "Send SMS",
-            detail: "Sends the post-first-class check-in: \"Well done on completing your first STRONG Pilates class today. How did you go?\"",
+            detail: "Routes to different SMS wording based on the package type.",
+            branches: [
+              {
+                label: "Intro to STRONG",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Add tag: sms_sent_post first visit",
+                    detail: "Marks this SMS as sent.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send SMS (Intro to STRONG variant)",
+                    detail: "Post-first-class check-in tailored to the Intro to STRONG package.",
+                  },
+                ],
+              },
+              {
+                label: "STRONG Experience",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Add tag: sms_sent_post first visit",
+                    detail: "Marks this SMS as sent.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send SMS (STRONG Experience variant)",
+                    detail: "Post-first-class check-in tailored to the STRONG Experience package.",
+                  },
+                ],
+              },
+              {
+                label: "STRONG Starter",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Add tag: sms_sent_post first visit",
+                    detail: "Marks this SMS as sent.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send SMS (STRONG Starter variant)",
+                    detail: "Post-first-class check-in tailored to the STRONG Starter package.",
+                  },
+                ],
+              },
+              {
+                label: "STRONG Intro Offer",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Add tag: sms_sent_post first visit",
+                    detail: "Marks this SMS as sent.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send SMS (STRONG Intro Offer variant)",
+                    detail: "Post-first-class check-in tailored to the current STRONG Intro Offer package.",
+                  },
+                ],
+              },
+            ],
           },
         ]}
         settings={{ allowReentry: false, stopOnResponse: false }}

@@ -332,38 +332,115 @@ export default function NewIntroOffers() {
           {
             type: "condition",
             label: "Does their Active Package contain 'STRONG Intro Offer'?",
-            detail: "Routes into four branches: new purchase (no visits), new purchase (already attended 1 class), re-intro offer (no visits), and re-intro offer (already attended). Each branch has slightly different field values.",
-          },
-          {
-            type: "action",
-            label: "Update fields: Intro Offer Name and other tracking fields",
-            detail: "Sets the Intro Offer Name to the specific package name and updates any other fields needed for this offer type.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity in Intro Offer Pipeline",
-            detail: "Updates the pipeline card with the correct stage based on attendance status.",
-          },
-          {
-            type: "action",
-            label: "Add tag: pipeline - intro offer",
-            detail: "Ensures the pipeline tag is present.",
-          },
-          {
-            type: "action",
-            label: "Send email: 'You're in. Let's Get STRONG.'",
-            detail: "The welcome email confirming their purchase. Includes what to expect, how to book, and studio details.",
-          },
-          {
-            type: "action",
-            label: "Add task: Welcome Call",
-            detail: "Creates a task for the studio team to call the new purchaser and welcome them personally.",
-          },
-          {
-            type: "link",
-            label: "Add to Attendance Check and Tasking workflow",
-            detail: "Enrolls the contact in the booking reminder and no-show follow-up workflow.",
-            linkTo: "/workflows/key-workflows/during-intro-offer",
+            detail: "Routes into four branches based on whether this is a new or returning purchase and whether they have already attended a class.",
+            branches: [
+              {
+                label: "New Purchase (no visits)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update fields: Intro Offer Name, Pipeline Day = 0",
+                    detail: "Sets all tracking fields for a brand new intro offer purchase.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Intro Offer Pipeline",
+                    detail: "Creates their pipeline card in the Pre stage.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add tag: pipeline - intro offer",
+                    detail: "Tags the contact for pipeline identification.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send email: 'You're in. Let's Get STRONG.'",
+                    detail: "Welcome email with booking info and studio details.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add task: Welcome Call",
+                    detail: "Creates a task for the studio to call the new purchaser.",
+                  },
+                  {
+                    type: "link",
+                    label: "Add to Attendance Check workflow",
+                    detail: "Enrolls in booking reminders and no-show follow-up.",
+                    linkTo: "/workflows/key-workflows/during-intro-offer",
+                  },
+                ],
+              },
+              {
+                label: "Re-Intro Offer (no visits)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update fields: Intro Offer Name, Pipeline Day = 0",
+                    detail: "Resets tracking fields for a returning purchaser starting a new intro offer.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Intro Offer Pipeline",
+                    detail: "Creates a new pipeline card in Pre stage.",
+                  },
+                  {
+                    type: "action",
+                    label: "Add tag: pipeline - intro offer",
+                    detail: "Ensures pipeline tag is present.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send email: 'You're in. Let's Get STRONG.'",
+                    detail: "Welcome email (same content as new purchase).",
+                  },
+                  {
+                    type: "action",
+                    label: "Add task: Welcome Call",
+                    detail: "Studio task to call the returning purchaser.",
+                  },
+                ],
+              },
+              {
+                label: "New Purchase (1 visit)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update fields with attendance-adjusted values",
+                    detail: "Sets tracking fields accounting for the class they already attended before the workflow fired.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Active stage",
+                    detail: "Creates pipeline card directly in Active stage (skipping Pre since they already visited).",
+                  },
+                  {
+                    type: "action",
+                    label: "Send email + task + attendance enrollment",
+                    detail: "Same welcome sequence as no-visits branch.",
+                  },
+                ],
+              },
+              {
+                label: "Re-Intro (1 visit)",
+                steps: [
+                  {
+                    type: "action",
+                    label: "Update fields with attendance-adjusted values",
+                    detail: "Resets tracking fields for returning purchaser, adjusted for existing visit.",
+                  },
+                  {
+                    type: "action",
+                    label: "Update opportunity in Active stage",
+                    detail: "Pipeline card in Active stage.",
+                  },
+                  {
+                    type: "action",
+                    label: "Send email + task",
+                    detail: "Welcome sequence for returning purchaser with existing visit.",
+                  },
+                ],
+              },
+            ],
           },
           {
             type: "wait",
