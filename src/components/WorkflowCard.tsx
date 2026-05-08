@@ -7,12 +7,16 @@ interface WorkflowStep {
   label: string
   detail: string
   linkTo?: string
+  branches?: {
+    label: string
+    steps: WorkflowStep[]
+  }[]
 }
 
 interface WorkflowCardProps {
   name: string
   purpose: string
-  status: "published" | "draft"
+  status: "published" | "draft" | "retired"
   trigger?: string
   steps: WorkflowStep[]
   workflowUrl?: string
@@ -27,6 +31,67 @@ const stepTypeStyles: Record<WorkflowStep["type"], { bg: string; text: string; l
   condition: { bg: "bg-purple-50", text: "text-purple-700", label: "Check" },
   wait: { bg: "bg-gray-50", text: "text-gray-500", label: "Wait" },
   link: { bg: "bg-amber-50", text: "text-amber-700", label: "Workflow" },
+}
+
+function BranchView({ step }: { step: WorkflowStep }) {
+  if (!step.branches) return null
+
+  return (
+    <div className="my-3">
+      {/* Condition box */}
+      <div className="mx-auto max-w-sm rounded-lg border-2 border-purple-500 bg-purple-50 px-4 py-3 text-center">
+        <span className="inline-block rounded bg-white px-2 py-0.5 text-[10px] font-semibold text-purple-600">
+          CHECK
+        </span>
+        <p className="mt-1 mb-0 text-sm font-semibold text-purple-800">{step.label}</p>
+        <p className="mt-0.5 mb-0 text-xs text-purple-600">{step.detail}</p>
+      </div>
+
+      {/* Connector: line down from condition */}
+      <div className="mx-auto h-3 w-0.5 bg-purple-500" />
+
+      {/* Horizontal bar spanning all branches */}
+      <div className="mx-8 h-0.5 bg-purple-500" />
+
+      {/* Branch columns */}
+      <div
+        className="grid gap-3 mx-4"
+        style={{ gridTemplateColumns: `repeat(${step.branches.length}, minmax(0, 1fr))` }}
+      >
+        {step.branches.map((branch, bi) => (
+          <div key={bi} className="flex flex-col items-center">
+            {/* Connector down to branch label */}
+            <div className="h-3 w-0.5 bg-purple-500" />
+
+            {/* Branch label */}
+            <div className="w-full rounded-md border border-purple-300 bg-purple-50 px-2 py-1.5 text-center">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-purple-600">
+                {branch.label}
+              </span>
+            </div>
+
+            {/* Steps in this branch */}
+            {branch.steps.map((bs, si) => {
+              const bStyle = stepTypeStyles[bs.type]
+              return (
+                <div key={si} className="flex w-full flex-col items-center">
+                  <div className="h-1.5 w-0.5 bg-gray-300" />
+                  <div className="w-full rounded-md border border-gray-200 bg-white px-2.5 py-2">
+                    <span
+                      className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-semibold ${bStyle.bg} ${bStyle.text}`}
+                    >
+                      {bStyle.label.toUpperCase()}
+                    </span>
+                    <p className="mt-1 mb-0 text-xs text-gray-800">{bs.label}</p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export function WorkflowCard({ name, purpose, status, trigger, steps, workflowUrl, settings }: WorkflowCardProps) {
@@ -60,10 +125,12 @@ export function WorkflowCard({ name, purpose, status, trigger, steps, workflowUr
             className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
               status === "published"
                 ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-500"
+                : status === "retired"
+                  ? "bg-gray-100 text-gray-400"
+                  : "bg-gray-100 text-gray-500"
             }`}
           >
-            {status === "published" ? "Published" : "Draft"}
+            {status === "published" ? "Published" : status === "retired" ? "Retired" : "Draft"}
           </span>
         </div>
 
@@ -102,6 +169,14 @@ export function WorkflowCard({ name, purpose, status, trigger, steps, workflowUr
         <div className="border-t border-gray-200 bg-gray-50/50 px-5 py-4">
           <ol className="list-none m-0 p-0 space-y-2">
             {steps.map((step, i) => {
+              if (step.type === "condition" && step.branches) {
+                return (
+                  <li key={i}>
+                    <BranchView step={step} />
+                  </li>
+                )
+              }
+
               const style = stepTypeStyles[step.type]
               return (
                 <li key={i} className="flex items-start gap-3 text-sm">
