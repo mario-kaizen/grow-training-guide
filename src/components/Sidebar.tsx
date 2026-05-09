@@ -23,7 +23,19 @@ export function Sidebar() {
           <p className="text-sm text-zinc-500 mt-0.5">STRONG Pilates</p>
         </Link>
       </div>
-      <nav className="p-4 pb-20">
+      <div className="px-4 pt-4 pb-3">
+        <button
+          onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded border border-[#1e1e1e] bg-[#111] text-zinc-500 text-[13px] hover:border-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+          <span className="flex-1 text-left">Search...</span>
+          <kbd className="text-[10px] text-zinc-600 bg-[#1a1a1a] px-1.5 py-0.5 rounded border border-[#2a2a2a]">⌘K</kbd>
+        </button>
+      </div>
+      <nav className="p-4 pt-0 pb-20">
         {navigation.map((layer) => (
           <div key={layer.label} className="mb-5">
             <button

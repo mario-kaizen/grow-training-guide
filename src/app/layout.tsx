@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Sidebar } from "@/components/Sidebar"
+import { SearchModal } from "@/components/SearchModal"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
       </head>
       <body className="bg-[#FAF8F5] text-gray-900 antialiased">
         <Sidebar />
+        <SearchModal />
         <main className="ml-72 min-h-screen px-12 py-14">{children}</main>
       </body>
     </html>
