@@ -8,7 +8,7 @@ The moment Hapana sends a "Grow Account Created" email for a new STRONG Pilates 
 
 - Access to grow.hapana.com (Mario's credentials)
 - Access to core.hapana.com (to verify category names)
-- Access to Zendesk (for push notification request + welcome email)
+- Access to Zendesk (for the welcome email)
 - The studio's website URL, social media links, and contact details
 - The Core Forwarding phone number (from HQ spreadsheet)
 
@@ -98,12 +98,16 @@ These custom values are from retired products and should be removed to keep the 
 
 To delete: Select each value > Three dots > Bulk Actions > Delete Custom Values > Confirm.
 
-### Values That Hapana Fills
+### Push Notification Values (Brand Constants)
 
-| Custom Value | Action |
+These two values are the SAME for every STRONG studio, new or existing. They are the brand's single push notification app credentials (one OneSignal app for all of STRONG), verified identical across the template account and every studio sampled from 2023 through 2026. You do NOT need to request them from Hapana. Confirm they are present and correct, and fill them yourself if either is empty.
+
+| Custom Value | Value to use |
 |---|---|
-| **Push Notification API Key** | Hapana must fill this. See Step 3 below |
-| **Push Notification App ID** | Hapana must fill this. See Step 3 below |
+| **Push Notification API Key** | `NjYzNzZjZjgtOTNhYi00YWFkLTljMDctMmEyZjgwZDA5Zjcy` |
+| **Push Notification App ID** | `6a0dc196-c1a7-4bec-b542-ba7263a24313` |
+
+If both already hold the values above, leave them. If either is empty or different, set it to the value above and Save.
 
 ### Values to Leave Empty (For Now)
 
@@ -115,30 +119,18 @@ To delete: Select each value > Three dots > Bulk Actions > Delete Custom Values 
 
 ---
 
-## Step 3 | Request Push Notification Values from Hapana
+## Step 3 | Confirm Push Notification Values
 
-Create a Zendesk ticket to request the Push Notification API Key and App ID:
+The Push Notification API Key and App ID are brand constants shared by every STRONG studio (see Step 2). Accounts created from the template usually already have them filled, so this is a quick confirm, not a request.
 
-1. Go to **Zendesk > Add** (top left)
-2. Set fields:
-   - **Requester:** `stronggrow@hapana.com`
-   - **Assignee:** Mario Paguio
-   - **Internal Team:** Grow
-   - **Vandals:** Platforms
-   - **Partner:** Grow
-3. **Subject:** `Push Notification | STRONG [Location Name]`
-4. **Body:**
-   > Hey Team,
-   >
-   > I'm just reviewing STRONG Pilates [Location] Grow Account and have noticed that the push notification information in the Grow custom values are empty.
-   >
-   > Could you please fill this out for us.
-   >
-   > **Push Notification API Key**
-   > **Push Notification App ID**
-   >
-   > [Paste screenshot of the empty custom values]
-5. Set status to **Pending** (not Solved). Only mark Solved once Hapana has filled them out.
+1. In **Settings > Custom Values**, check both values:
+   - **Push Notification API Key** should be `NjYzNzZjZjgtOTNhYi00YWFkLTljMDctMmEyZjgwZDA5Zjcy`
+   - **Push Notification App ID** should be `6a0dc196-c1a7-4bec-b542-ba7263a24313`
+2. If either is empty or different, set it to the value above and Save.
+
+You do NOT need to raise a Zendesk ticket for these.
+
+**Fallback only:** if STRONG ever changes its push provider and the brand values above stop working, raise a Grow ticket to Hapana to confirm the new shared values, then update this SOP.
 
 ---
 
@@ -308,7 +300,7 @@ Before notifying Mario, confirm all of the following:
 
 - [ ] All required custom values are filled (check the table in Step 2)
 - [ ] Obsolete custom values deleted (STRONG Experience, Tough Love, Long Experience)
-- [ ] Push notification Zendesk ticket created (Pending status)
+- [ ] Push notification API Key and App ID present and match the brand constants
 - [ ] Unsubscribe form trigger verified and workflow published
 - [ ] Resubscribe form trigger verified and workflow published
 - [ ] SMS Unsubscribe workflow published
@@ -336,7 +328,7 @@ Steps marked with a checkmark can be handled by the `grow-location-setup` skill 
 |---|---|---|
 | 1. Log in | Yes | Firebase auth, target locationId |
 | 2. Custom values | Yes | Full CRUD API. Requires structured input data for location-specific values |
-| 3. Push notification Zendesk | Partial | Can draft. Zendesk API available |
+| 3. Confirm push notification values | Yes | Brand constants, fill via custom values API |
 | 4. Turn on workflows | Yes | Publish/unpublish API validated at scale |
 | 5. Email forwarding | Needs investigation | Location settings API not yet mapped |
 | 6. Update form name | Needs investigation | Forms API not fully mapped |
@@ -358,5 +350,5 @@ Steps marked with a checkmark can be handled by the `grow-location-setup` skill 
 |---|---|
 | Initial Setup Full Walkthrough | https://www.loom.com/share/327a0027a0e04227b1458308aa160e7f |
 | Custom Values Setup | https://www.loom.com/share/7eda88c249784948b15fbdf5a4f21e16 |
-| Push Notification via Zendesk | https://www.loom.com/share/64f8bc0a6cdc492ca379df2c750980c6 |
+| Push Notification via Zendesk (legacy, process changed, see Step 3) | https://www.loom.com/share/64f8bc0a6cdc492ca379df2c750980c6 |
 | Providing Location Access | https://www.loom.com/share/17251e84752d48f1a4a2eaa2d425c0f8 |
