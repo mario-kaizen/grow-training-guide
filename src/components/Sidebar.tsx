@@ -7,10 +7,24 @@ import { navigation } from "@/lib/navigation"
 
 export function Sidebar() {
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const current = (pathname ?? "/").replace(/\/+$/, "") || "/"
+
+  // The group that contains the current page. Everything defaults closed;
+  // this one opens automatically so the reader always sees where they are.
+  const activeLabel = navigation.find((layer) =>
+    layer.items.some((item) => item.slug === current)
+  )?.label
+
+  // User overrides on top of the default. A label only appears here once the
+  // reader has clicked it; until then the group follows the default (closed,
+  // unless it is the active group).
+  const [overrides, setOverrides] = useState<Record<string, boolean>>({})
+
+  const isOpen = (label: string) =>
+    label in overrides ? overrides[label] : label === activeLabel
 
   const toggleLayer = (label: string) => {
-    setCollapsed((prev) => ({ ...prev, [label]: !prev[label] }))
+    setOverrides((prev) => ({ ...prev, [label]: !isOpen(label) }))
   }
 
   return (
@@ -44,7 +58,7 @@ export function Sidebar() {
             >
               {layer.label}
               <svg
-                className={`w-3.5 h-3.5 transition-transform ${collapsed[layer.label] ? "-rotate-90" : ""}`}
+                className={`w-3.5 h-3.5 transition-transform ${isOpen(layer.label) ? "" : "-rotate-90"}`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -53,7 +67,7 @@ export function Sidebar() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            {!collapsed[layer.label] && (
+            {isOpen(layer.label) && (
               <ul className="space-y-0.5">
                 {layer.items.map((item) => {
                   const isActive = pathname === item.slug
