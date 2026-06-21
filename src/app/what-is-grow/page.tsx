@@ -73,22 +73,56 @@ export default function WhatIsGrow() {
 
       <Callout type="tip" title="Why this matters">
         <p>
-          When you&rsquo;re troubleshooting or building something new, the
-          template account is always the starting point. Changes are made there
-          first, then pushed out to locations. You rarely build directly inside a
-          studio&rsquo;s account.
+          Because every studio runs from one central template, the workflows,
+          emails, and automations are built and maintained centrally, not inside
+          your individual account. If something is not behaving the way you
+          expect, that is why changes go through support rather than being edited
+          studio by studio.
         </p>
       </Callout>
 
-      <h2>Who manages Grow?</h2>
+      <h2>Need more help?</h2>
 
       <p>
-        Kaizen Collective is the agency partner responsible for the entire Grow
-        ecosystem across all STRONG Pilates locations. This includes maintaining
-        workflows, deploying campaigns, handling Zendesk support tickets, and
-        coordinating with Hapana&rsquo;s development team when system-level
-        changes are needed.
+        This guide covers the day to day of Grow. If you are still stuck, or
+        something is not behaving the way it should, support is one email away.
+        Email{" "}
+        <a href="mailto:grow@strongpilates.co">grow@strongpilates.co</a>{" "}
+        and the team will help you sort it out.
       </p>
+
+      <Callout type="tip" title="How to send a support request that gets solved fast">
+        <p>The clearer your email, the quicker it gets fixed. Try to include:</p>
+        <ul>
+          <li>
+            <strong>Your studio name.</strong>{" "} So the team knows exactly
+            which account to open.
+          </li>
+          <li>
+            <strong>What is happening.</strong>{" "} A plain description of the
+            problem, and what you expected to happen instead.
+          </li>
+          <li>
+            <strong>Where it is happening.</strong>{" "} The contact, workflow,
+            pipeline, or page involved. Copy the link straight from Grow and
+            paste it in wherever you can, so the team lands on the exact spot.
+          </li>
+          <li>
+            <strong>A screenshot.</strong>{" "} If something looks wrong on
+            screen, a picture saves a lot of back and forth.
+          </li>
+          <li>
+            <strong>When it started.</strong>{" "} If it used to work, roughly
+            when it changed.
+          </li>
+        </ul>
+        <p>
+          A request like &ldquo;STRONG Coffs Harbour: this contact (link) is
+          stuck in the Day 2 column and should have moved after their second
+          visit&rdquo; gets actioned far faster than &ldquo;a member
+          isn&rsquo;t showing up right.&rdquo;
+        </p>
+      </Callout>
     </PageLayout>
   )
 }

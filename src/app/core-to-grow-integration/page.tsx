@@ -176,11 +176,10 @@ export default function CoreToGrowIntegration() {
 
       <Callout type="warning" title="Sync delays cause confusion">
         <p>
-          If a studio reports that a new member isn&rsquo;t showing in the right
-          pipeline, the first question is always: has the sync caught up yet?
-          Check the contact&rsquo;s custom field values in Grow. If key fields
-          (like intro offer purchase date) are empty, the sync hasn&rsquo;t run
-          yet.
+          If a new member is not showing in the right pipeline, the first
+          question to ask is whether the sync has caught up yet. Check the
+          contact&rsquo;s custom field values in Grow. If key fields (like intro
+          offer purchase date) are empty, the sync hasn&rsquo;t run yet.
         </p>
       </Callout>
 

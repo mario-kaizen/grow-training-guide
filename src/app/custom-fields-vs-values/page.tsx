@@ -157,7 +157,7 @@ export default function CustomFieldsVsValues() {
 
       <Screenshot
         src="/screenshots/grow-custom-values-list.png"
-        alt="Settings > Custom Values showing 71 values with columns for Name, Folder, Key, and Value. Visible entries include Calendar Link, Cancellation Form, Facebook, FromName_Lead, FromName_Member, GHL Location ID, Google Review URL, Instagram, LinkedIn, Location Short, and others. Several values show PLEASE ADD placeholders while others like LinkedIn and PS Drip Delay are filled in."
+        alt="Settings > Custom Values showing 71 values with columns for Name, Folder, Key, and Value. Visible entries include Calendar Link, Cancellation Form, Facebook, FromName_Lead, FromName_Member, Grow Location ID, Google Review URL, Instagram, LinkedIn, Location Short, and others. Several values show PLEASE ADD placeholders while others like LinkedIn and PS Drip Delay are filled in."
         caption="The Custom Values list in the template account. Values marked PLEASE ADD need to be filled in by each location."
       />
 
@@ -398,7 +398,7 @@ export default function CustomFieldsVsValues() {
             <td>Pricing and deep links for the current intro offer</td>
           </tr>
           <tr>
-            <td>GHL Location ID</td>
+            <td>Grow Location ID</td>
             <td>Internal system identifier</td>
           </tr>
         </tbody>

@@ -54,7 +54,6 @@ export default function MembershipJourney() {
         name="01. 60 Day Member Journey"
         purpose="A multi-week email and SMS nurture sequence for new members. Sends 8 emails and 2 SMS messages over approximately 60 days, spaced out with wait periods. Each message checks for DND status before sending."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/0244bf4c-857c-4511-842f-78585b19c1c5"
         steps={[
           {
             type: "wait",
@@ -189,7 +188,6 @@ export default function MembershipJourney() {
         name="00. 60 Day Journey | Tagging Current Members so they don't pass through the new 60 Day Journey"
         purpose="A one-time utility workflow that tags existing members with the '60 day member nurture' tag. This prevents current members from receiving the nurture sequence, which is designed only for new members."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/baaad190-0c33-4c75-b799-8ded9b05f2ab"
         steps={[
           {
             type: "condition",
@@ -209,7 +207,6 @@ export default function MembershipJourney() {
         name="02. 60 Day Member Journey | Remove from workflow when Location Status = inactive"
         purpose="If a member's location status changes to inactive during the 60-day nurture (they cancelled or their membership lapsed), this workflow removes them from the nurture sequence."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/efafd8df-1329-4ca2-89fc-b1a403bc5074"
         steps={[
           {
             type: "wait",
@@ -249,7 +246,6 @@ export default function MembershipJourney() {
         name="02. Attendance Milestones Notification"
         purpose="When a member reaches 3 classes before a milestone (47, 97, 197, 497, 997), creates a task for the studio to prepare the celebration and sends an internal notification to the assigned user."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/6bb7730d-2739-4329-9456-6f74588b7115"
         steps={[
           {
             type: "condition",
@@ -297,7 +293,6 @@ export default function MembershipJourney() {
         name="03. Birthday Studio Notification"
         purpose="On a contact's birthday, notifies the studio with an internal email. Creates a preparation task for active members and package holders. Sends a different notification for leads (contacts with no active package)."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/273133bf-face-41c3-a014-3658ce41c26b"
         trigger="Birthday Reminder"
         steps={[
           {
@@ -348,7 +343,6 @@ export default function MembershipJourney() {
         name="05. Membership | Suspensions"
         purpose="Detects when a member's Location Status changes to 'suspendedMembership'. Tags them as suspended, stamps the suspension date, then watches for when they return to active or go inactive."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/ade1af58-e4d1-420d-bb42-4c072ba00945"
         steps={[
           {
             type: "condition",
@@ -420,7 +414,6 @@ export default function MembershipJourney() {
         name="99. Current Member Suspensions (batch tagging)"
         purpose="A utility workflow for batch-tagging currently suspended members. Used when setting up a new location or after a data cleanup to ensure all suspended contacts have the correct tag."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/4e47133e-e6b5-4ef4-a553-4bb0e098c2a3"
         steps={[
           {
             type: "condition",
@@ -479,7 +472,6 @@ export default function MembershipJourney() {
         name="06. Location Status = inactive"
         purpose="When a contact's Location Status changes to 'inactive' (cancelled membership, expired package, or account deactivated), removes all active status tags to keep the data clean."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/a421409d-32ab-4522-93d3-4d55aec8b0bb"
         steps={[
           {
             type: "wait",
@@ -513,7 +505,6 @@ export default function MembershipJourney() {
         name="01. Days Absent SMS | 7, 14 and 21 Days | Memberships Only"
         purpose="When a member has not attended for 7, 14, or 21 days, creates a task for the studio and sends an internal notification. Checks that they are still an active member and not recently suspended before acting."
         status="draft"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/acacc3d8-0ad6-4d3d-ba54-90bcda74e22e"
         steps={[
           {
             type: "wait",
@@ -563,7 +554,6 @@ export default function MembershipJourney() {
         name="07. Weekly Check-ins | When Attendance Total changes, add 1 to weekly check-in field"
         purpose="Increments the weekly check-in counter by 1 each time a contact attends a class. The counter resets on a schedule (managed outside of workflows)."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/dd59ae50-6714-4bb1-bd20-15ccb6faeff6"
         steps={[
           {
             type: "condition",
@@ -583,7 +573,6 @@ export default function MembershipJourney() {
         name="10. Monthly Check-ins | When Attendance Total changes, add 1 to monthly check-in field"
         purpose="Same as the weekly check-in but for the monthly counter. Used for monthly attendance reporting."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/80ab0d2d-f9b8-4fcc-90dc-dc3a36b4e7e6"
         steps={[
           {
             type: "condition",

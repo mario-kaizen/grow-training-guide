@@ -572,9 +572,9 @@ export default function DuringIntroOffer() {
       <h3>A member who never attended is suddenly running the full nurture sequence</h3>
       <p>
         <strong>What&apos;s happening.</strong> This is almost always a
-        duplicate-contact fix gone wrong. Grow no longer has a merge button, so
-        consolidating two records for one person means editing identifier
-        fields (moving a phone number, adding a name) by hand. If you do that on
+        duplicate-contact fix gone wrong. The Merge button is not available at
+        studio level, so consolidating two records for one person means editing
+        identifier fields (moving a phone number, adding a name) by hand. If you do that on
         a record that already carries attendance history, the field change can
         fire the Visits Update workflow, which sees status Pre with attendance
         above 0 and flips them to Active with 1 visit. That cascades into 1st
@@ -609,10 +609,10 @@ export default function DuringIntroOffer() {
         purchase record runs the Intro Offer pipeline on its own.
       </p>
       <p>
-        <strong>How to fix.</strong> Grow has no merge button, so you
-        consolidate the two records by hand: move the shared phone number onto
-        the record you are keeping and match it in Core so the sync does not
-        undo it. The full step-by-step is on the{" "}
+        <strong>How to fix.</strong> The Merge button is not available at
+        studio level, so you consolidate the two records by hand: move the
+        shared phone number onto the record you are keeping and match it in
+        Core so the sync does not undo it. The full step-by-step is on the{" "}
         <a href="/troubleshooting/contact-duplicates">Contact Duplicates</a>{" "}
         page. One hard rule: if either record has an active intro offer, leave
         the identifier fields alone until the offer period is over, because

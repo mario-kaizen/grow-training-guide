@@ -83,7 +83,6 @@ export default function NewLeads() {
         name="01. Website Submission | send notifications and add to Lead Pipeline if Active Package is empty"
         purpose="Handles every lead that fills out the website enquiry form. Sets their source, notifies the studio, sends a welcome email, tags them as a lead, and creates a pipeline opportunity."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/07caa788-5dca-4bf9-8a0a-b4c8d9e6b339"
         trigger="Form Submitted (website enquiry form)"
         steps={[
           {
@@ -129,7 +128,6 @@ export default function NewLeads() {
         name="01. STRONG Intro Offer | New Lead Workflow"
         purpose="Handles leads from Facebook and Instagram ads. Runs a multi-day nurture sequence with emails, SMS, and a task to call the lead, checking at each step whether they have purchased."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/7307f139-52e6-4c27-8756-4bbf495e871c"
         trigger="Facebook Lead Form Submitted (filtered by Page and Form)"
         steps={[
           {
@@ -265,7 +263,6 @@ export default function NewLeads() {
         name="00. Update 'Date Contact Created' when new contact is made"
         purpose="Sets the Date Contact Created field to the current date. A simple utility workflow used by other workflows to timestamp when a contact first entered the system."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/f60b4791-64d1-40d2-8823-ecf9a4e00ab9"
         steps={[
           {
             type: "action",
@@ -280,7 +277,6 @@ export default function NewLeads() {
         name="01. Systems | Assign User | New Lead"
         purpose="Automatically assigns a team member to the new lead contact so they have an owner in the system."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/4e886d32-fabf-447d-95b5-ef74666fe331"
         steps={[
           {
             type: "action",
@@ -304,7 +300,6 @@ export default function NewLeads() {
         name="02. First time booking SMS confirmation"
         purpose="Sends a confirmation SMS when a lead books their first class. Checks whether this SMS has already been sent to avoid duplicates, and routes to the correct message based on whether they have attended before."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/bfef5888-e460-4eb4-88a7-aee7f6425255"
         steps={[
           {
             type: "wait",
@@ -344,7 +339,6 @@ export default function NewLeads() {
         name="03. First Visit Complete Check-in Message"
         purpose="Sends a check-in SMS after a contact completes their first class. Routes to the correct message variant based on which intro offer package they are on."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/596eb026-4dd2-4b56-87f0-c41813b5abb6"
         steps={[
           {
             type: "wait",

@@ -62,11 +62,6 @@ export default function Contacts() {
           group of contacts. Always make sure you have the right smart list
           selected before sending.
         </li>
-        <li>
-          <strong>Merge:</strong>{" "} combine duplicate contact records into one.
-          This comes up when a contact exists in Grow from a form submission and
-          then gets created again by the Core sync.
-        </li>
       </ul>
 
       <h3>Actions you probably will not use</h3>
@@ -207,8 +202,12 @@ export default function Contacts() {
           If a lead fills out a form in Grow and later purchases in Core, the
           sync may create a second record if the email address does not match
           exactly. Email is the primary matching key between the two systems.
-          When you spot duplicates, use the Merge function to combine them into
-          a single record.
+          When you spot duplicates, you cannot merge them yourself. Use the
+          phone-number workaround in the{" "}
+          <a href="/troubleshooting/contact-duplicates">Contact Duplicates</a>{" "}
+          guide, and email{" "}
+          <a href="mailto:grow@strongpilates.co">grow@strongpilates.co</a>{" "}
+          if the duplicate is causing problems.
         </p>
       </Callout>
     </PageLayout>

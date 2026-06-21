@@ -39,7 +39,6 @@ export default function SystemWorkflows() {
         name="01. Systems | Assign User | New Lead"
         purpose="Automatically assigns a team member to new lead contacts so they have an owner in the system for tasks, notifications, and pipeline visibility."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/4e886d32-fabf-447d-95b5-ef74666fe331"
         steps={[
           {
             type: "action",
@@ -54,7 +53,6 @@ export default function SystemWorkflows() {
         name="02. Systems | Assign User | Sale"
         purpose="Assigns a team member to contacts when a sale is made. Ensures that purchased contacts have an owner for follow-up tasks and pipeline management."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/89e15aea-86f6-4198-a967-662e8b1d045f"
         steps={[
           {
             type: "action",
@@ -88,7 +86,6 @@ export default function SystemWorkflows() {
         name="00. Update 'Date Contact Created' when new contact is made"
         purpose="Sets the 'Date Contact Created' field to the current date when a new contact enters the system. Used for reporting and time-based filtering."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/f60b4791-64d1-40d2-8823-ecf9a4e00ab9"
         steps={[
           {
             type: "action",
@@ -103,7 +100,6 @@ export default function SystemWorkflows() {
         name="02. Intro Offers | Update Date Intro Offer Purchased"
         purpose="When a contact's Active Package changes to an intro offer, stamps the purchase date, adds the 'active - intro offer' tag, and watches for when they leave intro offer status (either upgrading to membership or going inactive)."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/5c9cdd07-074f-4777-ad5c-092e0f0cb2d5"
         steps={[
           {
             type: "wait",
@@ -153,7 +149,6 @@ export default function SystemWorkflows() {
         name="03. Memberships | Update Date Membership Purchased"
         purpose="When a contact's Active Package changes to a membership, stamps the purchase date, adds the 'active - memberships' tag, and watches for when they leave membership status. Includes a guard for recently suspended members to avoid re-stamping."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/383da02e-7936-449e-9877-95f7f7086ec4"
         steps={[
           {
             type: "wait",
@@ -208,7 +203,6 @@ export default function SystemWorkflows() {
         name="04. Packages | Update Date Packages Purchased"
         purpose="When a contact's Active Package changes to a package (class packs, etc.), stamps the purchase date, adds the 'active - packages' tag, and watches for when they leave package status."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/3591a37b-a052-42b2-8030-2cdaad3621f8"
         steps={[
           {
             type: "wait",
@@ -253,7 +247,6 @@ export default function SystemWorkflows() {
         name="10. Intro Offer First Visit Date Field"
         purpose="When a contact's Intro Offer Pipeline Visits reaches 1 (their first class), stamps the 'Intro Offer First Visit Date' field. Used for calculating the 14-day intro offer window."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/ad1b7c9a-aa36-4e9f-8c3c-8405a3306ab5"
         steps={[
           {
             type: "wait",
@@ -280,7 +273,6 @@ export default function SystemWorkflows() {
         name="03. Systems | Active Package Change Internal Notification"
         purpose="Sends an internal email to the studio when a contact's Active Package changes. Different notification templates for intro offer purchases vs membership/package purchases. Can be turned on or off per location."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/6ec1093e-8e3d-4cbf-a4a9-f4448f490971"
         steps={[
           {
             type: "wait",
@@ -349,7 +341,6 @@ export default function SystemWorkflows() {
         name="01. Core_Sale Update | mark as SOLD in all pipelines"
         purpose="When a sale happens in Core, this workflow checks every pipeline the contact might be in and marks the opportunity as the correct status. Handles Leads, STRONG Experience, and Presale pipelines in a single workflow."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/770c10f3-0f51-40f6-8708-040033497dc5"
         steps={[
           {
             type: "action",
@@ -431,7 +422,6 @@ export default function SystemWorkflows() {
         name="04. STRONG Starter | Replied STOP"
         purpose="When a contact replies STOP during the STRONG Starter lead nurture, enables SMS DND, removes them from all active nurture workflows, cleans up their Leads Pipeline opportunity, and removes nurture tags. This is one example; each campaign has its own variant."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/59d910a9-7a9a-4213-b15f-99ce1fe4b5d5"
         steps={[
           {
             type: "action",
@@ -519,7 +509,6 @@ export default function SystemWorkflows() {
         name="Update Last Call Date Field | Intro Offer Contact Card"
         purpose="When the studio logs a call with an intro offer contact, this workflow stamps the date on both the contact record and the pipeline opportunity. Keeps the pipeline card showing when the last outreach happened."
         status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/21dfe08e-8bd9-4b29-9548-1792212b7f5b"
         steps={[
           {
             type: "action",

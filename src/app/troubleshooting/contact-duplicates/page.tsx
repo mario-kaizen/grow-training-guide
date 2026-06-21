@@ -7,17 +7,19 @@ export default function ContactDuplicates() {
   return (
     <PageLayout
       title="Contact Duplicates & Merges"
-      description="Why duplicate contacts happen, and how to consolidate a phone number onto the right contact now that Grow has no merge button."
+      description="Why duplicate contacts happen, and how to consolidate a phone number onto the right contact because the Merge button is not available at the studio level."
       slug="/troubleshooting/contact-duplicates"
     >
-      <Callout type="important" title="Grow no longer has a merge feature">
+      <Callout type="important" title="The Merge button is not available at studio level">
         <p>
-          The old merge contacts button is gone. You cannot combine two
-          records into one anymore, so there is no way to pull the
-          conversation history, notes, and activity from one contact onto
-          another. The best you can do is move the shared identifier
-          (usually a phone number) onto the contact you want to keep. The
-          manual workaround for that is further down this page.
+          Grow does have a merge function, but it is locked at the studio
+          level, so you cannot combine two records into one yourself. The
+          workaround below moves the important identifier (usually a phone
+          number) onto the right contact. If a duplicate is actively
+          breaking something (wrong pipeline, an automation firing on the
+          wrong record), email{" "}
+          <a href="mailto:grow@strongpilates.co">grow@strongpilates.co</a>{" "}
+          and the team can help.
         </p>
       </Callout>
 
@@ -73,11 +75,11 @@ export default function ContactDuplicates() {
         enquiry.
       </p>
 
-      <h2>How to merge contacts without the merge feature</h2>
+      <h2>How to consolidate a duplicate without merging</h2>
 
       <p>
-        Since the merge button no longer exists, this is how you somewhat
-        merge two contacts when one person has their email on a named
+        Since you cannot merge at the studio level, this is how you
+        consolidate two contacts when one person has their email on a named
         contact and their phone number sitting on a separate record.
         You move the phone number onto the named contact, then make Core
         match so the sync does not undo your work.
@@ -95,7 +97,7 @@ export default function ContactDuplicates() {
 
       <LoomEmbed
         url="https://www.loom.com/share/25514aa3d2464906be365c736ea2e9b3"
-        title="Watch: how to merge contacts in Grow without the merge feature"
+        title="Watch: how to consolidate a duplicate without merging"
       />
 
       <StepByStep
