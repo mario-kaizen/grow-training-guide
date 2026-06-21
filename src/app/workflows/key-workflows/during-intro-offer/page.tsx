@@ -1,985 +1,747 @@
 import { PageLayout } from "@/components/PageLayout"
 import { Callout } from "@/components/Callout"
 import { ConnectionDiagram } from "@/components/ConnectionDiagram"
-import { WorkflowCard } from "@/components/WorkflowCard"
+
+function Col({ kind, children }: { kind: "auto" | "manual"; children: React.ReactNode }) {
+  const c =
+    kind === "auto"
+      ? "bg-green-50 border-green-300 text-green-900"
+      : "bg-red-50 border-red-300 text-red-900"
+  return (
+    <span className={`inline-block rounded-md border px-3 py-1.5 text-xs font-medium ${c}`}>
+      {children}
+    </span>
+  )
+}
 
 export default function DuringIntroOffer() {
   return (
     <PageLayout
       title="During Intro Offer"
-      description="Day-by-day progression, visit tracking, nudges, and conversion."
+      description="The board, the day-by-day journey, how to read the visit count, and what to do when it looks wrong."
       slug="/workflows/key-workflows/during-intro-offer"
     >
       <p>
-        Once a contact has purchased an intro offer and been set up by
-        the workflows on the{" "}
-        <a href="/workflows/key-workflows/new-intro-offers">
-          New Intro Offers
-        </a>{" "}
-        page, a second layer of workflows takes over. These handle the
-        day-by-day pipeline progression, visit counting, booking
-        nudges, membership upsell, and the three possible exits: Won
-        (converted to membership), Abandoned/Lost, or Expired.
+        Once a member has bought an intro offer and been set up by the{" "}
+        <a href="/workflows/key-workflows/new-intro-offers">New Intro Offers</a>{" "}
+        workflows, a second layer takes over: the day-by-day journey across
+        the board, the visit count, and the three ways it can end. This page
+        is the board, how to read it, and what to do when it looks wrong.
+      </p>
+
+      <h2>The board at a glance</h2>
+
+      <p>
+        The Intro Offer board has 25 columns. That sounds like a lot, but they
+        fall into four simple groups, and most of them move on their own.
+      </p>
+
+      <div className="my-8 not-prose space-y-3 rounded-xl border border-gray-200 bg-[#FAF8F5] p-6">
+        <div className="flex flex-wrap gap-4 text-[11px] font-medium text-gray-600">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-sm border border-green-400 bg-green-100" />
+            moves on its own
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-3 w-3 rounded-sm border border-red-400 bg-red-100" />
+            you move it by hand
+          </span>
+        </div>
+
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="mt-0 mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            1 &middot; Entry
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Col kind="auto">Purchase</Col>
+            <Col kind="manual">Welcome Call Complete</Col>
+          </div>
+        </div>
+        <div className="text-center text-gray-300">&darr;</div>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="mt-0 mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            2 &middot; No-show (hasn&apos;t attended yet)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Col kind="auto">No Attendance [4-13 Days]</Col>
+            <Col kind="auto">No Attendance [over 14 Days]</Col>
+          </div>
+        </div>
+        <div className="text-center text-gray-300">&darr;</div>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="mt-0 mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            3 &middot; Daily run (attending)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Col kind="auto">1st Visit Complete (day 1)</Col>
+            <Col kind="auto">Day 2 &rarr; Day 3 &rarr; ... &rarr; Day 15</Col>
+          </div>
+        </div>
+        <div className="text-center text-gray-300">&darr;</div>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="mt-0 mb-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+            4 &middot; Exits
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Col kind="auto">Expired</Col>
+            <Col kind="manual">Expired Call No Answer 1</Col>
+            <Col kind="manual">Expired Call No Answer 2</Col>
+            <Col kind="manual">Expired Call No Answer 3</Col>
+            <Col kind="manual">Future Follow Up</Col>
+            <Col kind="auto">Membership/Package</Col>
+          </div>
+        </div>
+      </div>
+
+      <figure className="my-8 not-prose">
+        <div className="overflow-x-auto rounded border border-gray-200">
+          <a href="/screenshots/intro-offer-pipeline-board.png" target="_blank" rel="noopener noreferrer">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/screenshots/intro-offer-pipeline-board.png"
+              alt="The Intro Offer pipeline board in Grow, every column from Purchase through the Day stages to the exits."
+              className="h-[340px] max-w-none w-auto"
+            />
+          </a>
+        </div>
+        <figcaption className="mt-2.5 text-center text-sm text-gray-500">
+          The same board in Grow. Scroll sideways to see every column, or click to open it full size. The colour-coding above is our teaching aid, not something Grow shows, so use this page to tell which columns move on their own and which you move by hand.
+        </figcaption>
+      </figure>
+
+      <p>
+        Most members go Purchase, then 1st Visit Complete, then the daily run.
+        A member who has not attended yet waits in the No Attendance columns
+        and joins the daily run the moment they come in. The columns sit on
+        the board in this same order, left to right, so 1st Visit Complete is
+        the start of the daily run, not an entry column.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Group</th>
+            <th>Columns</th>
+            <th>Who moves the card</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Entry</td>
+            <td>Purchase, <strong>Welcome Call Complete</strong></td>
+            <td>Automatic, except <strong>Welcome Call Complete</strong></td>
+          </tr>
+          <tr>
+            <td>No-show</td>
+            <td>No Attendance [4-13 Days], No Attendance [over 14 Days]</td>
+            <td>Automatic</td>
+          </tr>
+          <tr>
+            <td>Daily run</td>
+            <td>1st Visit Complete (day 1), Day 2 through Day 15</td>
+            <td>Automatic</td>
+          </tr>
+          <tr>
+            <td>Exits</td>
+            <td>Expired, <strong>Expired Call No Answer 1/2/3</strong>, <strong>Future Follow Up</strong>, Membership/Package</td>
+            <td>Automatic, except the <strong>Call No Answer</strong> and <strong>Future Follow Up</strong> columns</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>The member&apos;s journey across the board</h2>
+
+      <p>A member&apos;s path through the board is simple once you see it:</p>
+
+      <ConnectionDiagram
+        nodes={[
+          { id: "pre", label: "Bought, not yet attended", type: "source", description: "Status: Pre (Purchase column)" },
+          { id: "active", label: "Attends first class", type: "workflow", description: "Status: Active (1st Visit Complete)" },
+          { id: "run", label: "One column per day", type: "workflow", description: "Day 2 to Day 15" },
+          { id: "won", label: "Membership / Package", type: "outcome", description: "joins as a member" },
+          { id: "expired", label: "Expired", type: "outcome", description: "offer runs out" },
+        ]}
+        connections={[
+          { from: "pre", to: "active", label: "attends first class" },
+          { from: "active", to: "run" },
+          { from: "run", to: "won" },
+          { from: "run", to: "expired" },
+        ]}
+      />
+
+      <ul>
+        <li>A new buyer sits in <strong>Purchase</strong> with the status <strong>Pre</strong>.</li>
+        <li>
+          The moment they attend their first class, they flip to{" "}
+          <strong>Active</strong> and the card moves to <strong>1st Visit
+          Complete</strong>. There is no &ldquo;Day 1&rdquo; column. 1st Visit
+          Complete is day one.
+        </li>
+        <li>From there the card moves one column per day: Day 2, Day 3, and so on to Day 15.</li>
+        <li>It ends one of three ways: they join (Membership/Package), the offer runs out (Expired), or your team parks them for later.</li>
+      </ul>
+
+      <h2>What moves itself, and what you move</h2>
+
+      <p>This is the part studios get wrong most often, so it is worth being precise.</p>
+
+      <p>
+        <strong>Automatic.</strong> Each daily move has its own workflow that
+        fires the moment a card lands in a column. It waits about a day,
+        checks whether the member has joined or let the offer lapse, then
+        pushes the card to the next column. You do not touch these. The
+        day-by-day march from 1st Visit Complete down to Day 15 runs itself.
+      </p>
+
+      <p>
+        <strong>You move these by hand.</strong> Four columns track something
+        the system simply cannot see, so a human has to move the card:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Column you move</th>
+            <th>When you move it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Welcome Call Complete</strong></td>
+            <td>After you have actually completed the welcome call. Grow has no way to know the call happened.</td>
+          </tr>
+          <tr>
+            <td><strong>Expired Call No Answer 1, 2, 3</strong></td>
+            <td>As you work through your expired-member call attempts and nobody picks up. Each no-answer is a manual step.</td>
+          </tr>
+          <tr>
+            <td><strong>Future Follow Up</strong></td>
+            <td>When you decide to park a member to follow up later. That is a judgement call, so it is a manual move.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <Callout type="tip" title="The rule of thumb">
+        <p>
+          If the card depends on a human action (a call made, a call answered,
+          a decision to wait), you move it. Everything else moves itself.
+        </p>
+      </Callout>
+
+      <h2>Where the visit number on the card comes from</h2>
+
+      <p>
+        Every card shows the member&apos;s name and a visit count, like
+        &ldquo;Sarah (3 visits) - STRONG Intro Offer.&rdquo; Here is exactly
+        where that number comes from, because it is the source of the most
+        common confusion.
       </p>
 
       <ConnectionDiagram
         nodes={[
-          { id: "setup", label: "Contact set up by purchase workflows", type: "source" },
-          { id: "daily", label: "Day 1 → Day 15 progression", type: "workflow", description: "15 workflows, one per day" },
-          { id: "visits", label: "02. Visits Update", type: "workflow", description: "Tracks attendance, updates pipeline" },
-          { id: "false", label: "03. False Starter Check", type: "workflow", description: "Flags contacts with no visits" },
-          { id: "attend", label: "03. Attendance Check", type: "workflow", description: "3-day SMS, 7-day call task" },
-          { id: "upsell1", label: "04. 3 visits OR Day 8", type: "workflow", description: "Membership options email" },
-          { id: "upsell2", label: "05. 5 visits OR Day 14", type: "workflow", description: "Intro offer complete email" },
-          { id: "won", label: "Won", type: "outcome", description: "Purchased membership" },
-          { id: "lost", label: "Lost / Abandoned", type: "outcome", description: "Disengaged" },
-          { id: "expired", label: "Expired", type: "outcome", description: "Offer period ended" },
+          { id: "class", label: "Member attends a class", type: "source" },
+          { id: "at", label: "Core updates Attendance Total", type: "workflow" },
+          { id: "vu", label: "02. Intro Offer Visits Update adds +1", type: "workflow", description: "to Intro Offer Pipeline Visits" },
+          { id: "field", label: "The field updates instantly", type: "workflow", description: "Intro Offer Pipeline Visits" },
+          { id: "card", label: "Card name shows (N visits)", type: "outcome", description: "re-printed on the next daily move" },
         ]}
         connections={[
-          { from: "setup", to: "daily" },
-          { from: "setup", to: "visits" },
-          { from: "setup", to: "false" },
-          { from: "setup", to: "attend" },
-          { from: "daily", to: "upsell1", label: "Reaches Day 8 or 3 visits" },
-          { from: "upsell1", to: "upsell2", label: "Reaches Day 14 or 5 visits" },
-          { from: "upsell2", to: "won" },
-          { from: "upsell2", to: "lost" },
-          { from: "upsell2", to: "expired" },
+          { from: "class", to: "at" },
+          { from: "at", to: "vu", label: "change detected" },
+          { from: "vu", to: "field" },
+          { from: "field", to: "card" },
         ]}
       />
 
-      <h2>The day-by-day pipeline progression</h2>
-
       <p>
-        The Intro Offer Pipeline has 15 columns: Day 1 through Day 15,
-        plus a &ldquo;False Starter&rdquo; column for contacts who
-        purchased but have not attended. A set of 15 published
-        workflows moves each contact from one column to the next,
-        one day at a time.
+        The workflow that drives this is <strong>02. Intro Offer Visits
+        Update</strong>. Every time the member&apos;s attendance changes, it
+        adds 1 to their <strong>Intro Offer Pipeline Visits</strong> count.
       </p>
 
-      <h3>How the daily workflows work</h3>
+      <p>
+        But notice the gap between the last two steps. The <strong>field</strong>{" "}
+        updates the instant a class is attended. The <strong>card name</strong>{" "}
+        only re-prints that number when a workflow next re-writes the card,
+        which after the first visit happens on the next daily move. So the
+        field is always current, and the card name catches up roughly once a
+        day.
+      </p>
+
+      <h2>Core vs Grow: read this before you trust a number</h2>
 
       <p>
-        Each daily workflow (for example, &ldquo;Day 05 &gt; Day
-        6&rdquo;) follows the same pattern:
+        Two numbers look similar and get mixed up constantly. They come from
+        different places.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Where it comes from</th>
+            <th>What it means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Attendance Total</strong></td>
+            <td><strong>Core</strong> (Hapana)</td>
+            <td>The real count of classes attended. This is the source of truth.</td>
+          </tr>
+          <tr>
+            <td><strong>Intro Offer Pipeline Visits</strong></td>
+            <td><strong>Grow</strong>, not Core</td>
+            <td>A tally that Grow adds 1 to every time Attendance Total changes. A count kept by counting, not the real number.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Because Pipeline Visits is counted by Grow rather than read from Core,
+        it can drift. The workflow adds 1 whenever Attendance Total{" "}
+        <em>changes</em>, not only when it goes up. So if Core re-syncs and
+        nudges the value, Grow can add an extra visit.{" "}
+        <strong>When the two disagree, Attendance Total from Core is the one to
+        believe.</strong>
+      </p>
+
+      <h2>When a card looks wrong: the Pipeline Fix</h2>
+
+      <p>
+        There is a repair workflow built for exactly this:{" "}
+        <strong>202510 Intro Offer Pipeline Fix</strong>. It recalculates
+        which column a member should be in from their real{" "}
+        <strong>Intro Offer Purchase Date</strong> and{" "}
+        <strong>Intro Offer First Visit Date</strong>, then puts the card where
+        it belongs.
+      </p>
+
+      <p>
+        To run it on a member whose card has gone wrong, add the tag{" "}
+        <code>intro offer fix</code> to their contact. The workflow does the
+        rest. (It only works when those two dates are correct. If the dates
+        themselves are wrong, fix them first, then run it.)
+      </p>
+
+      <h2>When a member&apos;s intro offer gets extended</h2>
+
+      <p>
+        Sometimes a studio extends a member&apos;s intro in Core to give them
+        more time. Core does not tell Grow, and the Grow automation is built
+        around the member&apos;s <strong>original</strong> purchase and
+        first-visit dates plus a fixed 14-day tag timer. So an extension has
+        to be handled by hand, or the member gets wrongly expired.
+      </p>
+
+      <Callout type="warning" title="Two things go wrong if it is left alone">
+        <p className="mt-0">
+          <strong>1.</strong> The card runs out the original timeline and lands
+          in Expired.
+        </p>
+        <p className="mb-0">
+          <strong>2.</strong> Even if you move the card back, the 06 workflow
+          still removes the protection tag on the old 14-day timer, so Status
+          Update expires them again.
+        </p>
+      </Callout>
+
+      <p>
+        <strong>What to do when an intro gets extended.</strong> Three steps,
+        all manual:
       </p>
 
       <ol>
         <li>
-          <strong>Update Pipeline Day</strong> {" "} sets the
-          contact&apos;s &ldquo;Intro Offer Pipeline Day&rdquo; custom
-          field to the current day number.
+          <strong>Move the card to the right day.</strong> Work out how many
+          days are left on the extended offer, and move the card to the Day
+          column that lines up with that, so the daily run carries them to Day
+          15 right as the extended offer actually ends.
         </li>
         <li>
-          <strong>Update Intro Offer Days Remaining</strong> {" "}
-          recalculates how many days are left in their intro offer
-          period.
+          <strong>Take them out of the tag workflow.</strong> Remove the
+          contact from the <strong>06. STRONG Intro Offer</strong> workflow
+          (the one that adds, and later removes, the{" "}
+          <code>active - 5 session strong intro offer</code> tag). This stops
+          the tag being removed early on the original 14-day timer, which is
+          what would otherwise re-expire them.
         </li>
         <li>
-          <strong>Remove from all other daily workflows</strong>{" "}
-          removes the contact from every other Day X workflow to prevent
-          double-processing. This is the &ldquo;cleanup before
-          processing&rdquo; pattern.
-        </li>
-        <li>
-          <strong>Wait 24 hours</strong> {" "} pauses for one day.
-        </li>
-        <li>
-          <strong>Check: do they have a membership now?</strong> {" "}
-          if they upgraded during the wait, marks the pipeline as won
-          and stops.
-        </li>
-        <li>
-          <strong>Move the pipeline card</strong> {" "} updates the
-          opportunity to the next day&apos;s column.
-        </li>
-        <li>
-          <strong>Check: do they still have an intro offer?</strong>
-          {" "} if their intro offer expired during the wait, updates
-          the pipeline status accordingly.
+          <strong>Set a task to remove the tag yourself.</strong> Create a task
+          dated to the new, extended expiry. On that day, remove the{" "}
+          <code>active - 5 session strong intro offer</code> tag by hand. That
+          is what tells the pipeline they have genuinely reached the end, and
+          lets the normal expiry run.
         </li>
       </ol>
 
-      <Callout type="tip" title="Why remove from all other daily workflows first?">
+      <Callout type="important" title="Why all three">
         <p>
-          Each daily workflow removes the contact from all 14 other
-          daily workflows before doing anything else. This prevents a
-          situation where a contact could be in two daily workflows at
-          once if something re-triggers or delays. By the time the Wait
-          step finishes, the contact is guaranteed to only be in one
-          daily workflow.
+          Step 1 keeps the board accurate. Step 2 stops the automation expiring
+          them early. Step 3 makes sure they still expire at the right time
+          once the extension is genuinely over. Skip step 2 and the tag removal
+          re-expires them. Skip step 3 and they never expire at all.
         </p>
       </Callout>
 
-      <WorkflowCard
-        name="Day 01 > Day 2 (representative example)"
-        purpose="Moves a contact from Day 1 to Day 2 of their intro offer journey. All 15 daily workflows follow this same structure. Only the day number and pipeline column change between them."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/338d6fd7-914a-42e0-b087-49498e65889d"
-        steps={[
-          {
-            type: "action",
-            label: "Update field: Intro Offer Pipeline Day = 1",
-            detail: "Stamps the current day number on the contact record.",
-          },
-          {
-            type: "action",
-            label: "Update field: Intro Offer Days Remaining",
-            detail: "Calculates and stores how many days are left in the intro offer period.",
-          },
-          {
-            type: "action",
-            label: "Remove from all other daily workflows (13 Remove from Workflow actions)",
-            detail: "Removes the contact from Day 2 > Day 3 through Day 14 > Day 15. This is the cleanup pattern that prevents double-processing.",
-          },
-          {
-            type: "wait",
-            label: "Wait 24 hours",
-            detail: "Pauses for one day before moving to the next column.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Memberships or Packages in their Active Package Category?",
-            detail: "Guard check after the wait. If they converted to a membership during the 24-hour wait, the workflow marks the pipeline as won and stops.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity to next day's column",
-            detail: "Moves the pipeline card from Day 1 to Day 2.",
-          },
-          {
-            type: "action",
-            label: "Update field: Intro Offer Pipeline Day = 2",
-            detail: "Updates the day counter to the new day.",
-          },
-          {
-            type: "condition",
-            label: "Do they still have Intro Offer in their Active Package Category?",
-            detail: "Checks if the intro offer is still active. If it expired or was removed, the workflow updates the pipeline status to reflect that.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity and pipeline status if still active",
-            detail: "If they still have an active intro offer, moves them to the next day's column. The next daily workflow then picks them up.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
+      <h2>FAQ</h2>
 
+      <p>Questions about how the pipeline is meant to work.</p>
+
+      <h3>How long does it take for a purchase in Core to show up in Grow?</h3>
       <p>
-        The 15 daily workflows are:
+        Usually 15 to 30 minutes. The Core-to-Grow sync is not instant, so when
+        a member buys you will not see them on the board straight away. If Core
+        has not validated the member&apos;s phone number yet, it can take a
+        little longer, but it should never be more than an hour. If it has been
+        over an hour, treat it as a fault and see Troubleshooting below.
       </p>
 
-      <div className="my-4 overflow-x-auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Workflow</th>
-              <th>Status</th>
-              <th>What it does</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Day 01 &gt; Day 2</td>
-              <td>Published</td>
-              <td>Moves from Day 1 to Day 2 after 24 hours</td>
-            </tr>
-            <tr>
-              <td>Day 02 &gt; Day 3</td>
-              <td>Published</td>
-              <td>Moves from Day 2 to Day 3</td>
-            </tr>
-            <tr>
-              <td>Day 03 &gt; Day 4</td>
-              <td>Published</td>
-              <td>Moves from Day 3 to Day 4</td>
-            </tr>
-            <tr>
-              <td>Day 04 &gt; Day 5</td>
-              <td>Published</td>
-              <td>Moves from Day 4 to Day 5</td>
-            </tr>
-            <tr>
-              <td>Day 05 &gt; Day 6</td>
-              <td>Published</td>
-              <td>Moves from Day 5 to Day 6</td>
-            </tr>
-            <tr>
-              <td>Day 06 &gt; Day 7</td>
-              <td>Published</td>
-              <td>Moves from Day 6 to Day 7</td>
-            </tr>
-            <tr>
-              <td>Day 07 &gt; Day 8</td>
-              <td>Published</td>
-              <td>Moves from Day 7 to Day 8</td>
-            </tr>
-            <tr>
-              <td>Day 08 &gt; Day 9</td>
-              <td>Published</td>
-              <td>Moves from Day 8 to Day 9</td>
-            </tr>
-            <tr>
-              <td>Day 09 &gt; Day 10</td>
-              <td>Published</td>
-              <td>Moves from Day 9 to Day 10</td>
-            </tr>
-            <tr>
-              <td>Day 10 &gt; Day 11</td>
-              <td>Published</td>
-              <td>Moves from Day 10 to Day 11</td>
-            </tr>
-            <tr>
-              <td>Day 11 &gt; Day 12</td>
-              <td>Published</td>
-              <td>Moves from Day 11 to Day 12</td>
-            </tr>
-            <tr>
-              <td>Day 12 &gt; Day 13</td>
-              <td>Published</td>
-              <td>Moves from Day 12 to Day 13</td>
-            </tr>
-            <tr>
-              <td>Day 13 &gt; Day 14</td>
-              <td>Published</td>
-              <td>Moves from Day 13 to Day 14</td>
-            </tr>
-            <tr>
-              <td>Day 14 &gt; Day 15</td>
-              <td>Published</td>
-              <td>Moves from Day 14 to Day 15 (final day)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <WorkflowCard
-        name="Day 15"
-        purpose="The final day of the intro offer pipeline progression. Performs the end-of-journey check: if the contact has a membership, marks the pipeline as won. If their intro offer expired, updates the pipeline status to reflect expiry and creates a follow-up task."
-        status="published"
-        steps={[
-          {
-            type: "action",
-            label: "Update field: Intro Offer Pipeline Day = 15",
-            detail: "Stamps the final day number on the contact record.",
-          },
-          {
-            type: "action",
-            label: "Remove from all other daily workflows",
-            detail: "Final cleanup of all Day X workflow enrollments.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Memberships or Packages?",
-            detail: "Checks whether the contact converted during their intro offer period.",
-          },
-          {
-            type: "action",
-            label: "Update pipeline status based on outcome",
-            detail: "If they have a membership: mark as Won. If their intro offer expired: update pipeline to reflect expiry and create a follow-up task for the studio.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h2>Visit tracking</h2>
-
+      <h3>Why is the visit number in the member&apos;s profile different from the number on their card?</h3>
       <p>
-        While the daily workflows handle the time-based progression,
-        the Visits Update workflow handles the attendance-based
-        progression. Every time a contact attends a class, this
-        workflow fires and updates their visit count on the pipeline.
+        They are two separate stores. The profile field (Intro Offer Pipeline
+        Visits) updates the moment a class is attended. The card name is a text
+        label that only re-prints the number when a workflow re-writes the
+        card, which after the first visit happens about once a day. Attend a
+        class this morning and the field jumps straight away, but the card
+        still shows the earlier number until that day&apos;s move runs. (The
+        card carries only one true field of its own, Last Call Date. Everything
+        else you see on it, the visits and the offer name, is baked into the
+        card&apos;s name when it was last written.)
       </p>
 
-      <WorkflowCard
-        name="02. Intro Offer Visits Update | add to 1st Day Complete + adds 1 to Intro Offer Pipeline Visits"
-        purpose="Fires when a contact's attendance total changes. Updates their visit count on the pipeline, transitions their status from 'Pre' (pre-first-visit) to 'Active', and recalculates remaining visits."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/3777a941-d68a-4fb0-8184-79019cc43a89"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for the sync to complete.",
-          },
-          {
-            type: "condition",
-            label: "Is their Active Package Category 'Intro Offer(s)' or do they have the 'active - package based offer' tag?",
-            detail: "Only processes contacts who are currently on an intro offer. Ignores membership holders.",
-          },
-          {
-            type: "condition",
-            label: "What is their Attendance Total?",
-            detail: "Checks that they have at least one visit recorded.",
-          },
-          {
-            type: "condition",
-            label: "What is their Intro Offer Pipeline Status?",
-            detail: "Routes based on whether this is their first visit or a subsequent visit.",
-            branches: [
-              {
-                label: "Pre (first visit)",
-                steps: [
-                  {
-                    type: "action",
-                    label: "Update Pipeline Status to Active",
-                    detail: "Transitions from Pre to Active, marking that they have now attended their first class.",
-                  },
-                  {
-                    type: "action",
-                    label: "Update fields: Pipeline Visits = 1, recalculate Days Remaining",
-                    detail: "Sets the initial visit count and calculates remaining visits in the package.",
-                  },
-                  {
-                    type: "action",
-                    label: "Update opportunity in Intro Offer Pipeline",
-                    detail: "Updates the pipeline card to reflect the Active status and first visit.",
-                  },
-                ],
-              },
-              {
-                label: "Active (subsequent visit)",
-                steps: [
-                  {
-                    type: "action",
-                    label: "Math operation: increment Pipeline Visits by 1",
-                    detail: "Adds 1 to the running visit counter.",
-                  },
-                  {
-                    type: "action",
-                    label: "Math operation: recalculate Visits Remaining",
-                    detail: "Updates the remaining visits calculation.",
-                  },
-                  {
-                    type: "action",
-                    label: "Update opportunity in Intro Offer Pipeline",
-                    detail: "Updates the pipeline card with the new visit count.",
-                  },
-                ],
-              },
-            ],
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <WorkflowCard
-        name="02. STRONG Intro Offer | First Class Complete and Halfway SMS"
-        purpose="Sends timed check-in messages during the intro offer. After the contact completes their first class, sends a congratulations SMS. At the halfway point of their package, sends a progress check-in SMS encouraging them to keep booking."
-        status="published"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "condition",
-            label: "What is their Intro Offer Pipeline Visits count?",
-            detail: "Routes based on visit count to determine which message to send: first class complete or halfway check-in.",
-          },
-          {
-            type: "action",
-            label: "Send SMS: First class or halfway check-in",
-            detail: "Sends the appropriate message based on where they are in their intro offer journey.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h2>No-show handling</h2>
-
+      <h3>Why are there two visit fields, Intro Offer Pipeline Visits and STRONG Intro Offer Visits?</h3>
       <p>
-        Two workflows handle contacts who are not attending. The False
-        Starter Check catches people who purchase but never book
-        their first class. The Attendance Check workflow catches
-        people who attended once but then stopped.
+        Both count the same thing and move together. The card name uses Intro
+        Offer Pipeline Visits.
       </p>
 
-      <WorkflowCard
-        name="03. Intro Offer Pipeline False Starter Check"
-        purpose="Detects contacts who purchased an intro offer but have not attended any classes. Flags them to the studio and moves their pipeline card to the False Starter column for manual follow-up."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/afcffa7d-ecc2-42b9-93e4-18d64cab6ccd"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Gives the contact time to book and attend before flagging them.",
-          },
-          {
-            type: "condition",
-            label: "Is their Pipeline Status still 'Pre'?",
-            detail: "'Pre' means they have not attended any classes yet. If still Pre, they are a false starter.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity to False Starter column",
-            detail: "Moves the pipeline card to the False Starter column so the studio can see who needs outreach.",
-          },
-          {
-            type: "action",
-            label: "Add task: False Starter follow-up",
-            detail: "Creates a task for the studio team to contact this person and help them book.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Extended wait to see if the booking reminder or outreach prompted attendance.",
-          },
-          {
-            type: "condition",
-            label: "Is their Pipeline Status still 'Pre'?",
-            detail: "Second check. If they still have not attended, the pipeline card stays in False Starter for ongoing studio follow-up.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity",
-            detail: "Updates the pipeline card with the latest status.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <WorkflowCard
-        name="03. STRONG Intro Offer | Attendance Check, Booking Reminder after 3 days, Tasking after 7 Days of No Attendance"
-        purpose="Monitors whether a contact who purchased an intro offer is actually attending. If they have not visited after 3 days, sends a booking reminder SMS. If they still have not visited after 7 days, creates a task for the studio to call them."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/11e9c47d-e86d-4404-967b-a95e8e7b5586"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait 3 days",
-            detail: "Gives the contact 3 days after purchase to book and attend.",
-          },
-          {
-            type: "condition",
-            label: "Is their Intro Offer Pipeline Visits still at 0?",
-            detail: "If they have not attended any classes after 3 days, the booking reminder fires.",
-          },
-          {
-            type: "action",
-            label: "Send SMS: Booking reminder",
-            detail: "Sends a friendly SMS reminding them to book their first class. Includes a link to the booking system.",
-          },
-          {
-            type: "wait",
-            label: "Wait 4 more days (7 days total)",
-            detail: "Waits an additional 4 days to see if the SMS prompted action.",
-          },
-          {
-            type: "condition",
-            label: "Is their Intro Offer Pipeline Visits still at 0?",
-            detail: "If they still have not attended after 7 days, escalates to a personal call.",
-          },
-          {
-            type: "action",
-            label: "Add task: Phone Call",
-            detail: "Creates a task for the studio team to call this contact personally. At this point, automated messages have not worked, so human outreach is the next step.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <Callout type="tip" title="Attendance Check has offer-specific variants">
-        <p>
-          There are separate Attendance Check workflows for STRONG
-          Intro Offer, STRONG Experience, STRONG Starter, and UK/IE
-          locations. They all follow the same pattern (3-day SMS, 7-day
-          call task) but are separated so each can be published or
-          drafted along with its matching Purchase Confirmation
-          workflow.
-        </p>
-      </Callout>
-
-      <h2>Day 0 False Starter reset</h2>
-
+      <h3>A member has used up all their classes, or their package shows empty, but they are still active in the pipeline. Why?</h3>
       <p>
-        If a contact is moved to the False Starter column in the
-        pipeline (either manually by the studio or by the False Starter
-        Check workflow) and then later books and attends, they need to
-        re-enter the day-by-day progression. The Day 0 workflow handles
-        this reset.
+        Because the 5-session offer uses a credit when a class is{" "}
+        <strong>booked</strong>, not when it is attended. A member who books
+        all five classes ahead empties their package straight away, even before
+        attending. The <code>active - 5 session strong intro offer</code> tag
+        (added on purchase by the 06. STRONG Intro Offer workflow) keeps them
+        protected in the pipeline until 14 days from their first visit or 5
+        completed classes, so they are not expired early just for booking
+        ahead.
       </p>
 
-      <WorkflowCard
-        name="Day 0 | False Starter Column | When they're moved to 'False Starter' Column"
-        purpose="Resets a contact's daily progression when they are moved to the False Starter column. Sets their pipeline day back to 0 and status to 'Pre', and removes them from all daily workflows so they can start fresh when they eventually attend."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/e78b5370-73ac-4869-9ca9-fc4d47f93b17"
-        steps={[
-          {
-            type: "action",
-            label: "Update field: Intro Offer Pipeline Day = 0",
-            detail: "Resets the day counter to 0.",
-          },
-          {
-            type: "action",
-            label: "Update field: Pipeline Status = Pre",
-            detail: "Sets status back to 'Pre' (pre-first-visit) so the Visits Update workflow knows to treat their next visit as their first.",
-          },
-          {
-            type: "action",
-            label: "Remove from all daily workflows (13 Remove from Workflow actions)",
-            detail: "Removes them from every Day X > Day Y workflow so they are not being progressed while in the False Starter column.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h2>Membership upsell</h2>
-
+      <h3>A card is sitting in a column and nothing is moving it. Is it stuck?</h3>
       <p>
-        The upsell workflows trigger at two points during the intro
-        offer: once the contact has either attended 3 classes or
-        reached Day 8, and again when they complete 5 classes or reach
-        Day 14. These are the conversion touchpoints that encourage the
-        contact to upgrade to a full membership.
+        Probably not. Check whether it is one of the four hand-moved columns:
+        Welcome Call Complete, the three Expired Call No Answer columns, or
+        Future Follow Up. Those never move on their own. They are waiting for
+        you.
       </p>
 
-      <WorkflowCard
-        name="04. STRONG Intro Offer | 3 visits OR Day 8, add task and send Membership Options"
-        purpose="When a contact reaches either 3 visits or Day 8 of their intro offer (whichever comes first), sends the membership options email and creates a follow-up task for the studio. Only fires if they have not already purchased a membership."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/c91dc361-a488-451b-8efe-bb074f58dabe"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "condition",
-            label: "Does their Active Package Category contain Memberships?",
-            detail: "Guard check. If they already have a membership, skip everything.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Intro or Re-Intro in their Active Package?",
-            detail: "Confirms they are still on an intro offer before sending the upsell.",
-          },
-          {
-            type: "action",
-            label: "Send email: 'Lock your STRONG membership in now.'",
-            detail: "The membership options email showing available membership plans, pricing, and how to sign up.",
-          },
-          {
-            type: "action",
-            label: "Add task: Membership Follow Up",
-            detail: "Creates a task for the studio to follow up on the membership conversation.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Spacing after the first membership options message before the next nudge.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <Callout type="tip" title="Regional variants exist">
-        <p>
-          The 3-visit/Day 8 upsell has separate published workflows for
-          USA/CA and UK/IE locations. These use different membership
-          pricing and currency in the email content. There is also a
-          STRONG Experience variant. All follow the same trigger logic
-          and step pattern.
-        </p>
-      </Callout>
-
-      <WorkflowCard
-        name="05. STRONG Intro Offer | 5 visits OR Day 14, send Intro Offer Complete email"
-        purpose="When a contact completes 5 visits or reaches Day 14 of their intro offer, sends the completion email summarising their experience and presenting the membership upgrade as the next step."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/73b43932-9440-4cbd-976a-b2917706f812"
-        steps={[
-          {
-            type: "condition",
-            label: "Do they have the 'active - 5 session strong intro offer' tag?",
-            detail: "Confirms they are still within the active intro offer window. This tag is managed by the 14-day tagging workflow.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Brief delay to confirm the contact reached the visit threshold before sending the completion email.",
-          },
-          {
-            type: "action",
-            label: "Send email: '{{contact.intro_offer_name}} Complete: What's Next?'",
-            detail: "The completion email, personalised with their specific intro offer name. Summarises their journey and presents membership as the natural next step.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Final window for conversion. After this, the exit workflows handle pipeline cleanup based on whether they purchased a membership.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h2>Exit handling</h2>
+      <h2>Troubleshooting</h2>
 
       <p>
-        Every contact on an intro offer eventually reaches one of three
-        exits. Each exit has its own workflow that handles the cleanup:
-        removing the contact from all daily workflows, updating the
-        pipeline, and cleaning up tags.
+        When something looks wrong, start here. Each one is a real cause we
+        have seen, written out in full so you can fix it from this page.
       </p>
 
-      <div className="my-6 p-5 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm font-[family-name:var(--font-kessel)] font-black uppercase tracking-wide text-black mt-0 mb-3">
-          The three exits
-        </p>
-        <div className="text-sm text-gray-700 space-y-1 font-mono">
-          <p className="m-0">
-            <strong>Won</strong>{" "} contact purchases a membership or
-            package. Pipeline marked as won, daily workflows stopped.
-          </p>
-          <p className="m-0">
-            <strong>Abandoned/Lost</strong>{" "} contact disengages. Studio
-            marks them manually, or system detects no activity. Pipeline
-            marked as lost, daily workflows stopped.
-          </p>
-          <p className="m-0">
-            <strong>Expired</strong>{" "} intro offer period ends without
-            purchase or manual intervention. Handled by the Status Update
-            workflow on the{" "}
-            <a href="/workflows/key-workflows/new-intro-offers">
-              New Intro Offers
-            </a>{" "}
-            page.
-          </p>
-        </div>
-      </div>
-
-      <h3>Won: converted to membership</h3>
-
-      <WorkflowCard
-        name="05. Intro Offer | Mark as sold if they've purchased a Membership or Packages in the Intro Offer Pipeline"
-        purpose="Detects when a contact on an intro offer purchases a membership or package. Finds their Intro Offer Pipeline opportunity, removes them from all daily workflows, marks the opportunity as won, waits 14 days for reporting, then cleans up the pipeline card and tags."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/1fbe6010-b6ba-42be-9752-e5f6ea5dcca2"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Memberships or Packages in their Active Package Category?",
-            detail: "Confirms a membership or package was actually purchased.",
-          },
-          {
-            type: "action",
-            label: "Find opportunity in Intro Offer Pipeline",
-            detail: "Locates their pipeline card.",
-          },
-          {
-            type: "action",
-            label: "Remove from all daily workflows",
-            detail: "Stops the day-by-day progression since they no longer need to be tracked.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity: mark as Won",
-            detail: "Moves the pipeline card to the Won stage.",
-          },
-          {
-            type: "action",
-            label: "Update field: Pipeline Status = Sold",
-            detail: "Updates the custom field to reflect the conversion.",
-          },
-          {
-            type: "wait",
-            label: "Wait 14 days",
-            detail: "Keeps the Won pipeline card visible for 14 days so the studio can see recent conversions in their pipeline view.",
-          },
-          {
-            type: "action",
-            label: "Remove tag: pipeline - intro offer",
-            detail: "Removes the pipeline identification tag.",
-          },
-          {
-            type: "action",
-            label: "Remove opportunity from Intro Offer Pipeline",
-            detail: "Cleans up the pipeline card after the 14-day reporting window.",
-          },
-          {
-            type: "action",
-            label: "Add note: Removed from pipeline",
-            detail: "Adds a note to the contact record documenting when they were removed from the Intro Offer Pipeline after converting to a membership.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <WorkflowCard
-        name="07. Intro Offer Marked Won"
-        purpose="Triggered when a pipeline opportunity is manually or automatically moved to the 'Won' stage. Performs the full cleanup: removes from all 14 daily workflows, checks for membership purchase, updates the pipeline, and cleans up after a delay."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/3f21ed95-e4e0-41d3-8fd3-4929ac5eec2e"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "action",
-            label: "Remove from all daily workflows (13 Remove from Workflow actions)",
-            detail: "Removes the contact from Day 1 > Day 2 through Day 14 > Day 15. This is the same cleanup pattern used by the Abandoned/Lost workflow.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Memberships or Packages in their Active Package Category?",
-            detail: "Confirms the Won status is backed by an actual purchase. If they do have a membership, the pipeline card is updated to Won.",
-          },
-          {
-            type: "action",
-            label: "Update opportunity: Won",
-            detail: "Sets the pipeline card to the Won stage.",
-          },
-          {
-            type: "wait",
-            label: "Wait 14 days",
-            detail: "Keeps the Won card visible for reporting.",
-          },
-          {
-            type: "action",
-            label: "Remove opportunity from Intro Offer Pipeline",
-            detail: "Cleans up after the reporting window.",
-          },
-          {
-            type: "action",
-            label: "Remove tag: pipeline - intro offer",
-            detail: "Final tag cleanup.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h3>Abandoned/Lost: contact disengaged</h3>
-
-      <WorkflowCard
-        name="06. Intro Offer Marked Abandoned/Lost"
-        purpose="Triggered when a pipeline opportunity is moved to the Abandoned or Lost stage. Performs the full cleanup: sets pipeline status, removes from all 14 daily workflows, waits for a delay, then removes the pipeline card and tags."
-        status="published"
-        workflowUrl="https://grow.hapana.com/location/cGie31g8caN2HkP6vN2P/workflow/1a007f54-8795-4ee3-863c-dbee000f6c34"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "action",
-            label: "Update field: Pipeline Status = Lost",
-            detail: "Stamps the Lost status on the contact record.",
-          },
-          {
-            type: "action",
-            label: "Remove from all daily workflows (13 Remove from Workflow actions)",
-            detail: "Removes the contact from Day 1 > Day 2 through Day 14 > Day 15.",
-          },
-          {
-            type: "wait",
-            label: "Wait",
-            detail: "Keeps the Lost pipeline card visible for the studio to review before removing it.",
-          },
-          {
-            type: "action",
-            label: "Remove opportunity from Intro Offer Pipeline",
-            detail: "Cleans up the pipeline card.",
-          },
-          {
-            type: "action",
-            label: "Remove tag: pipeline - intro offer",
-            detail: "Final tag cleanup.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <Callout type="warning" title="Abandoned/Lost removes from ALL daily workflows">
-        <p>
-          When a contact is marked as abandoned or lost, the workflow
-          removes them from all 14 daily workflows, not just the one
-          they are currently in. This is intentional. Because the
-          system cannot know which daily workflow the contact is
-          currently active in, it removes from all of them to guarantee
-          a clean exit. The same pattern is used by the Won workflow.
-        </p>
-      </Callout>
-
-      <h3>Pipeline stage verification</h3>
-
+      <h3>A member purchased, but they are not showing in Grow at all</h3>
       <p>
-        Two safety-net workflows fire when a pipeline card is manually
-        moved to the Expired or Memberships columns. They verify the
-        move is correct by checking the contact&apos;s actual data
-        before confirming the status change.
+        <strong>What&apos;s happening.</strong> Two common causes, in order of
+        likelihood:
       </p>
-
-      <WorkflowCard
-        name="08. Intro Offer Pipeline | When Moved to Expired"
-        purpose="Safety check when a contact is moved to the Expired column (manually or by another workflow). Verifies they genuinely do not have an active intro offer or membership before confirming the pipeline status."
-        status="published"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "condition",
-            label: "Do they actually have an empty Active Package?",
-            detail: "Confirms the expiry is real. If they still have an active package, the move was incorrect.",
-          },
-          {
-            type: "action",
-            label: "Update pipeline status or revert",
-            detail: "If confirmed expired: updates the pipeline card status. If they still have an active package: flags for review.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <WorkflowCard
-        name="09. Intro Offer Pipeline | When Moved to Memberships"
-        purpose="Safety check when a contact is moved to the Memberships column. Verifies they actually have an active membership or package before confirming the pipeline status change."
-        status="published"
-        steps={[
-          {
-            type: "wait",
-            label: "Wait (failsafe)",
-            detail: "Short pause for sync.",
-          },
-          {
-            type: "condition",
-            label: "Do they have Memberships or Packages in their Active Package Category?",
-            detail: "Confirms they actually upgraded. If not, the move was premature or incorrect.",
-          },
-          {
-            type: "action",
-            label: "Confirm or revert pipeline status",
-            detail: "If they have a membership: confirms the Won status. If not: reverts and flags for the studio to investigate.",
-          },
-        ]}
-        settings={{ allowReentry: true, stopOnResponse: false }}
-      />
-
-      <h2>How all the pieces connect</h2>
-
-      <div className="my-6 p-5 bg-gray-50 rounded-lg border border-gray-200">
-        <p className="text-sm font-[family-name:var(--font-kessel)] font-black uppercase tracking-wide text-black mt-0 mb-3">
-          Full intro offer timeline
-        </p>
-        <div className="text-sm text-gray-700 space-y-1 font-mono">
-          <p className="m-0">
-            <strong>Day 0</strong>{" "}
-            Purchase detected. Pipeline card created. Status: Pre.
-          </p>
-          <p className="m-0">
-            <strong>Day 1</strong>{" "}
-            Daily progression begins. Day 1 &gt; Day 2 workflow starts.
-          </p>
-          <p className="m-0">
-            <strong>Day 3</strong>{" "}
-            If no visits: booking reminder SMS sent.
-          </p>
-          <p className="m-0">
-            <strong>Day 7</strong>{" "}
-            If still no visits: call task created.
-          </p>
-          <p className="m-0">
-            <strong>First visit</strong>{" "}
-            Status changes from Pre to Active. Visit counter starts.
-          </p>
-          <p className="m-0">
-            <strong>3 visits OR Day 8</strong>{" "}
-            Membership options email sent. Follow-up task created.
-          </p>
-          <p className="m-0">
-            <strong>5 visits OR Day 14</strong>{" "}
-            Intro offer complete email sent.
-          </p>
-          <p className="m-0">
-            <strong>Day 15</strong>{" "}
-            Daily progression ends. Contact exits via Won, Lost, or Expired.
-          </p>
-        </div>
-      </div>
-
-      <Callout type="warning" title="Common issues at this stage">
-        <p>
-          Pipeline showing the wrong day, visit counter higher than actual
-          attendance, or a contact stuck in the wrong column? Check the{" "}
-          <a href="/troubleshooting/pipeline-inaccuracy">
-            Pipeline Inaccuracy
-          </a>{" "}
-          troubleshooting page. This is the most common category of
-          support tickets (~40%), usually caused by sync timing between
-          Core attendance data and Grow custom fields.
-        </p>
-      </Callout>
-
-      <h2>What the contact experiences</h2>
-
-      <p>
-        From the contact&apos;s perspective during their intro offer:
-      </p>
-
       <ol>
         <li>
-          <strong>If they do not book:</strong>{" "} after 3 days they
-          receive a friendly booking reminder SMS. After 7 days, the
-          studio calls them personally.
+          <strong>The sync has not run yet.</strong> Core to Grow takes 15 to
+          30 minutes, and up to an hour if the member&apos;s phone number is
+          not validated in Core. Most &ldquo;missing&rdquo; members are just
+          early.
         </li>
         <li>
-          <strong>After their first class:</strong>{" "} they receive a
-          check-in SMS (covered on the{" "}
-          <a href="/workflows/key-workflows/new-leads">New Leads</a>
-          {" "} page under First Visit Complete Check-in).
-        </li>
-        <li>
-          <strong>Around their third class or Day 8:</strong>{" "} they
-          receive the membership options email showing them how to
-          upgrade. The studio follows up to discuss membership.
-        </li>
-        <li>
-          <strong>Around their fifth class or Day 14:</strong>{" "} they
-          receive the intro offer completion email celebrating their
-          journey and presenting membership as the next step.
-        </li>
-        <li>
-          <strong>If they convert:</strong>{" "} the nurture messaging
-          stops and they enter the membership workflows (covered on
-          the{" "}
-          <a href="/workflows/key-workflows/membership-journey">
-            Membership Journey
-          </a>{" "}
-          page).
-        </li>
-        <li>
-          <strong>If they do not convert:</strong>{" "} their intro offer
-          expires, the pipeline card is cleaned up, and they sit in the
-          system until a future campaign re-engages them.
+          <strong>The package was set up in Core with the wrong Package
+          Category.</strong> A member only enters the Intro Offer pipeline when
+          their Active Package Category reads <strong>Intro Offer</strong> or{" "}
+          <strong>Intro Offers</strong>. If the package was created under a
+          different category by mistake, the sync still brings the contact
+          across, but the Status Update workflow never adds them to the board.
+          This has happened in the US by accident.
         </li>
       </ol>
+      <p>
+        <strong>How to fix.</strong> If it has been under an hour, wait. If it
+        has been longer, open the member in Core and check the package&apos;s
+        Category. Correct it to Intro Offer (or Intro Offers), and the next
+        sync will place them on the board.
+      </p>
 
-      <Callout type="tip" title="The pipeline is a visual dashboard for the studio">
-        <p>
-          The day-by-day pipeline progression is not just for
-          automation. Studios use the Intro Offer Pipeline as a visual
-          dashboard: they can see at a glance how many people are on
-          Day 1 vs Day 10, who is in the False Starter column, and who
-          has been marked as Won. The daily workflows keep this board
-          accurate without any manual work from the studio.
+      <h3>A member is on the board, but they never got the welcome email or any nurture</h3>
+      <p>
+        <strong>What&apos;s happening.</strong> The board and the messages run
+        off two different fields, the same split from the{" "}
+        <a href="/workflows/key-workflows/new-intro-offers">New Intro Offers</a>{" "}
+        page. A card lands on the board whenever the <strong>Active Package
+        Category</strong> is Intro Offer or Intro Offers, whatever the package
+        is called. But the post-purchase automations (the welcome email, the
+        nurture sequence, the check-in SMS, and the upsells) only fire when the{" "}
+        <strong>Active Package name</strong> matches what those workflows look
+        for, such as &ldquo;STRONG Intro Offer&rdquo; or &ldquo;7 Classes
+        for&rdquo;. So a studio running an intro offer under its own custom name
+        will see those members appear on the board correctly, but get none of
+        the messaging.
+      </p>
+      <p>
+        <strong>Watch out.</strong> The protection tag keys off the package
+        name too, so a custom-named offer also misses it. That means the
+        booking-ahead safeguard does not apply, and the member can be expired
+        early once they book all their classes.
+      </p>
+      <p>
+        <strong>How to fix.</strong> The automations have to be custom-built
+        for that package name: the welcome, nurture, milestone, and tag
+        workflows cloned and pointed at the new name. That is an HQ build, so
+        flag it to HQ with the studio and the exact package name. The simpler
+        option, if the studio is willing, is to use one of the standard intro
+        offer names in Core so the existing automations match. Until either is
+        done, the studio handles the welcome and follow-up for those members by
+        hand.
+      </p>
+
+      <h3>The day counter started on the wrong day, or a free class already moved them to 1st Visit Complete</h3>
+      <p>
+        <strong>What&apos;s happening.</strong> Grow cannot tell a free class
+        apart from a paid intro class. Any attended class moves the
+        member&apos;s Attendance Total, which fires the Visits Update workflow,
+        flips them from Pre to Active, and anchors the day counter to that
+        class&apos;s date. So a member who did a free STRONG Starter class, or
+        an old casual drop-in from months ago, can be moved to 1st Visit
+        Complete with the counter on the wrong date, before they have used a
+        single intro credit.
+      </p>
+      <p>
+        <strong>How to check.</strong> In Core, open the member&apos;s profile.
+      </p>
+      <ul>
+        <li>Payments tab (the 4th icon): find the intro offer package, note its Begin Date, and open Visits History to see every booked class.</li>
+        <li>Schedule tab (the 3rd icon): open Past Sessions and filter the dates to see every attended class, including free ones.</li>
+        <li>If a class shows in Past Sessions but not in the package&apos;s Visits History, it was a free class. If its date is before the package Begin Date, it started the counter early.</li>
+      </ul>
+      <p>
+        <strong>How to fix.</strong> Move the card back to where the member
+        actually is: back to Purchase if they have not started their paid
+        offer, or the correct Day column if they have. Set Intro Offer Pipeline
+        Visits to the real number, and correct the <strong>Intro Offer First
+        Visit Date</strong> field to their actual first paid visit. Once those
+        dates are right, you can add the <code>intro offer fix</code> tag to
+        let the Pipeline Fix re-place the card from the corrected dates. There
+        is no permanent prevention: the Core-to-Grow sync does not say whether
+        a class was free or paid, so this has to be caught by hand.
+      </p>
+
+      <h3>Pipeline Visits is higher than the classes the member actually attended</h3>
+      <p>
+        <strong>What&apos;s happening.</strong> Pipeline Visits is a Grow
+        tally, not a copy of Core. The Visits Update workflow adds 1 every time
+        Attendance Total <strong>changes</strong>, not only when it goes up.
+        Core syncs many times a day and can push a value that bounces (for
+        example 1, then 2, then 1, then 2), and each change adds another visit,
+        so the count inflates past the real attendance.
+      </p>
+      <p>
+        <strong>Why it matters.</strong> When Pipeline Visits reaches 5, the
+        protection tag <code>active - 5 session strong intro offer</code> is
+        removed. If the count is inflated, the tag comes off before the member
+        has truly done 5 classes, and with the tag gone the Status Update
+        workflow sees the empty package and moves them to Expired with sessions
+        still left.
+      </p>
+      <p>
+        <strong>How to check.</strong> Compare Grow&apos;s Pipeline Visits (in
+        the Intro Offer Information section on the contact) against the real
+        attendance count in Core&apos;s Visits History. To confirm the cause,
+        open Grow Settings, then Audit Logs, search the contact, and look at
+        Attendance Total across the Integration syncs. Fluctuating values with
+        Pipeline Visits ticking up each time is the inflation.
+      </p>
+      <p>
+        <strong>How to fix.</strong> Correct the Pipeline Visits field to the
+        real attendance count. If the protection tag was already removed, re-add{" "}
+        <code>active - 5 session strong intro offer</code> and move the card
+        back to the correct day. If you see this across several members at one
+        location, the studio&apos;s Core sync may be misconfigured, so flag it
+        to HQ with the contact IDs and audit-log screenshots.
+      </p>
+
+      <h3>A member who never attended is suddenly running the full nurture sequence</h3>
+      <p>
+        <strong>What&apos;s happening.</strong> This is almost always a
+        duplicate-contact fix gone wrong. Grow no longer has a merge button, so
+        consolidating two records for one person means editing identifier
+        fields (moving a phone number, adding a name) by hand. If you do that on
+        a record that already carries attendance history, the field change can
+        fire the Visits Update workflow, which sees status Pre with attendance
+        above 0 and flips them to Active with 1 visit. That cascades into 1st
+        Visit Complete and the whole 15-day nurture, even though they have zero
+        bookings on their current offer.
+      </p>
+      <p>
+        <strong>How to check.</strong> In Grow Audit Logs, search the contact
+        around when it went wrong and look for identifier-field edits, followed
+        within seconds by a cascade of status change, visit update, tag, and
+        card-move entries. Confirm in Core that they have zero bookings on the
+        current package.
+      </p>
+      <p>
+        <strong>How to fix.</strong> Reset the pipeline position by hand: move
+        the card back to Purchase, set Pipeline Visits to 0, set Intro Offer
+        Pipeline Status to Pre, and remove any tags the false activation added.
+        Going forward, never consolidate duplicate contacts while a record has
+        an active intro offer. The full duplicate-contact workaround, and the
+        rule to leave active intro offers alone, is on the{" "}
+        <a href="/troubleshooting/contact-duplicates">Contact Duplicates</a>{" "}
+        page.
+      </p>
+
+      <h3>A member bought, but they are still getting lead nurture and never showed as Sold in the Leads Pipeline</h3>
+      <p>
+        <strong>What&apos;s happening.</strong> This is two contacts for one
+        person. If they opted in with one email and purchased with a different
+        email, Core creates a second contact for the purchase. Grow now holds
+        two records with the same name and different email addresses: the
+        opt-in record stays in the Leads Pipeline being nurtured, while the
+        purchase record runs the Intro Offer pipeline on its own.
+      </p>
+      <p>
+        <strong>How to fix.</strong> Grow has no merge button, so you
+        consolidate the two records by hand: move the shared phone number onto
+        the record you are keeping and match it in Core so the sync does not
+        undo it. The full step-by-step is on the{" "}
+        <a href="/troubleshooting/contact-duplicates">Contact Duplicates</a>{" "}
+        page. One hard rule: if either record has an active intro offer, leave
+        the identifier fields alone until the offer period is over, because
+        editing them is exactly what triggers the false activation in the entry
+        above.
+      </p>
+
+      <h2>Reference: which workflow moves a card into each column</h2>
+
+      <p>
+        This is the precise map for tracing what put a member where they are.
+        You do not need it day to day. (Verified from the live template
+        workflows. Every workflow here is a draft on the template and runs live
+        once the studio is switched on, except the Pipeline Fix, which is
+        always on.)
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>What moves a card into it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Purchase</td>
+            <td><strong>01. Status Update</strong> and <strong>01. Purchase Confirmation</strong>, on the Core purchase</td>
+          </tr>
+          <tr>
+            <td>1st Visit Complete</td>
+            <td><strong>02. Visits Update</strong>, on the first attended class (or Status Update / Purchase Confirmation if they had already attended)</td>
+          </tr>
+          <tr>
+            <td>Day 2</td>
+            <td><strong>Day 01 &gt; Day 2</strong></td>
+          </tr>
+          <tr>
+            <td>Day 3</td>
+            <td><strong>Day 02 &gt; Day 3</strong></td>
+          </tr>
+          <tr>
+            <td>Day 4 through Day 14</td>
+            <td>the matching workflow: <strong>Day 03 &gt; Day 4</strong> writes Day 4, on up to <strong>Day 13 &gt; Day 14</strong> writes Day 14</td>
+          </tr>
+          <tr>
+            <td>Day 15</td>
+            <td><strong>Day 14 &gt; Day 15</strong></td>
+          </tr>
+          <tr>
+            <td>No Attendance [4-13 Days] and [over 14 Days]</td>
+            <td><strong>03. False Starter Check</strong></td>
+          </tr>
+          <tr>
+            <td>Expired</td>
+            <td>whichever step detects the offer has ended: <strong>01. Status Update</strong>, or the active <strong>Day</strong> workflow&apos;s expiry branch</td>
+          </tr>
+          <tr>
+            <td>Membership/Package</td>
+            <td>whichever step detects they converted: <strong>01. Status Update</strong>, <strong>05. Mark as Sold</strong>, or <strong>07. Marked Won</strong></td>
+          </tr>
+          <tr>
+            <td>Welcome Call Complete</td>
+            <td>nobody. You move it by hand.</td>
+          </tr>
+          <tr>
+            <td>Expired Call No Answer 1, 2, 3</td>
+            <td>nobody. You move it by hand.</td>
+          </tr>
+          <tr>
+            <td>Future Follow Up</td>
+            <td>nobody. You move it by hand.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <Callout type="tip" title="Two things to read alongside the table">
+        <p className="mt-0">
+          <strong>Each &ldquo;Day A &gt; Day B&rdquo; workflow is named for
+          exactly what it does.</strong> It is triggered when the card arrives
+          in column A, waits about a day, then writes the card into column B. So
+          &ldquo;Day 01 &gt; Day 2&rdquo; fires when the card reaches its
+          day-one spot (1st Visit Complete) and moves it into Day 2. That is how
+          the run advances itself, one column a day.
+        </p>
+        <p className="mb-0">
+          <strong>The 202510 Pipeline Fix can write a card into almost any
+          column.</strong> It is the reconciler. When you add the{" "}
+          <code>intro offer fix</code> tag, it recomputes the right column from
+          the real dates and places the card there.
         </p>
       </Callout>
+
+      <h3>What starts each of these workflows</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>What changes or happens</th>
+            <th>Workflow it starts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Active Package Category changes</td>
+            <td>01. Intro Offer Status Update</td>
+          </tr>
+          <tr>
+            <td>Active Package changes</td>
+            <td>01. Purchase Confirmation, and 06. the protection-tag workflow</td>
+          </tr>
+          <tr>
+            <td>Attendance Total changes</td>
+            <td>02. Intro Offer Visits Update</td>
+          </tr>
+          <tr>
+            <td>A card arrives in a Day column</td>
+            <td>the next Day workflow</td>
+          </tr>
+          <tr>
+            <td><code>intro offer fix</code> tag added</td>
+            <td>202510 Pipeline Fix</td>
+          </tr>
+          <tr>
+            <td><code>active - 5 session strong intro offer</code> tag removed</td>
+            <td>01. Status Update (re-checks, and can expire them)</td>
+          </tr>
+        </tbody>
+      </table>
     </PageLayout>
   )
 }

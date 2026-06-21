@@ -55,10 +55,15 @@ export const navigation: NavLayer[] = [
     items: [
       { title: "Overview", slug: "/workflows/key-workflows", description: "How workflow groups connect to the member journey" },
       { title: "New Leads", slug: "/workflows/key-workflows/new-leads", description: "Website submissions, Facebook leads, first contact" },
-      { title: "New Intro Offers", slug: "/workflows/key-workflows/new-intro-offers", description: "Purchase detection, welcome sequence, pipeline setup" },
-      { title: "During Intro Offer", slug: "/workflows/key-workflows/during-intro-offer", description: "Day-by-day progression, visits, nudges, conversion" },
       { title: "Membership Journey", slug: "/workflows/key-workflows/membership-journey", description: "60-day nurture, milestones, retention, birthdays" },
       { title: "System Workflows", slug: "/workflows/key-workflows/system-workflows", description: "Assignments, notifications, date stamps, DND, cleanup" },
+    ],
+  },
+  {
+    label: "Intro Offer",
+    items: [
+      { title: "New Intro Offers", slug: "/workflows/key-workflows/new-intro-offers", description: "How a member gets onto the board, and the welcome sequence" },
+      { title: "During Intro Offer", slug: "/workflows/key-workflows/during-intro-offer", description: "The board, the day-by-day journey, reading the visit count, and troubleshooting" },
     ],
   },
   {
