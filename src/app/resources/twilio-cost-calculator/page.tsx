@@ -18,9 +18,8 @@ export default function TwilioCostCalculator() {
       </p>
 
       <p>
-        Fill in the calculator below before any bulk send. Paste the message
-        and it counts the segments for you, or switch to manual entry if you
-        already know the count.
+        Use the calculator below before any bulk send. Write the message in and
+        it works out the segments for you.
       </p>
 
       <TwilioCalculator />
