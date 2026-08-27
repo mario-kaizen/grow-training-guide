@@ -77,6 +77,12 @@ export const navigation: NavLayer[] = [
       { title: "Email & Notification Issues", slug: "/troubleshooting/email-notifications", description: "Phantom notifications, delivery failures, spam triggers" },
     ],
   },
+  {
+    label: "Resources",
+    items: [
+      { title: "Twilio Cost Calculator", slug: "/resources/twilio-cost-calculator", description: "What an SMS campaign costs per region, and what emoji add to the bill" },
+    ],
+  },
 ]
 
 export function getAllPages(): { title: string; slug: string; layer: string }[] {
