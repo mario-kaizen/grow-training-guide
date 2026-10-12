@@ -56,6 +56,12 @@ export default function SmartLists() {
         the Core integration populates.
       </p>
 
+      <p>
+        If your studio was set up before these names were standardised, you may
+        have similar lists under different names. Check the filters rather than
+        the name.
+      </p>
+
       <h3>1. All Database w/email minus DND</h3>
 
       <p>
@@ -88,7 +94,8 @@ export default function SmartLists() {
       </table>
 
       <p>
-        <strong>Columns:</strong>{" "} Name, Created, Last Activity, Phone, Tags
+        <strong>Columns:</strong>{" "} Name, Created, Email, Last Activity,
+        Phone, Tags
       </p>
 
       <h3>2. Leads Only (No Active or Past Purchases)</h3>
@@ -129,12 +136,17 @@ export default function SmartLists() {
             <td>Is not empty</td>
             <td></td>
           </tr>
+          <tr>
+            <td><code>Location Status</code></td>
+            <td>Is not</td>
+            <td>suspendedMembership</td>
+          </tr>
         </tbody>
       </table>
 
       <p>
-        <strong>Columns:</strong>{" "} Name, Active Package, Created, Last
-        Activity, Past Active Packages, Phone, Tags
+        <strong>Columns:</strong>{" "} Name, Created, Last Activity, Past
+        Active Packages, Phone, Tags
       </p>
 
       <Callout type="tip" title="Why both Active Package and Past Active Packages?">
@@ -150,8 +162,9 @@ export default function SmartLists() {
       <p>
         People who previously had a package or membership but no longer have
         anything active. These are former members, expired intro offer holders,
-        and lapsed package users. This list is useful for win-back campaigns
-        and re-engagement outreach.
+        and lapsed package users. Members who have paused their membership are
+        left out. This list is useful for win-back campaigns and re-engagement
+        outreach.
       </p>
 
       <table>
@@ -183,6 +196,11 @@ export default function SmartLists() {
             <td>Is not empty</td>
             <td></td>
           </tr>
+          <tr>
+            <td><code>Location Status</code></td>
+            <td>Is not</td>
+            <td>suspendedMembership</td>
+          </tr>
         </tbody>
       </table>
 
@@ -190,6 +208,16 @@ export default function SmartLists() {
         <strong>Columns:</strong>{" "} Name, Active Package, Created, Email, Last
         Activity, Past Active Packages, Phone, Tags
       </p>
+
+      <Callout type="important" title="Why paused members need their own filter">
+        <p>
+          When a membership is paused in Core, the Active Package field goes
+          blank in Grow until the membership resumes. Without the Location Status
+          filter, paused members look exactly like former members and land in
+          this list, so they would receive your win back messages. The same
+          filter keeps them out of Leads Only.
+        </p>
+      </Callout>
 
       <h3>4. Active Intro Offer</h3>
 
@@ -211,15 +239,22 @@ export default function SmartLists() {
         <tbody>
           <tr>
             <td><code>Active Package Category</code></td>
-            <td>Contains exactly</td>
+            <td>Contains</td>
             <td>Intro</td>
           </tr>
         </tbody>
       </table>
 
       <p>
+        Core names this category &ldquo;Intro Offers&rdquo; at most studios and
+        &ldquo;Intro Offer&rdquo; at some. Filtering on just the word
+        &ldquo;Intro&rdquo; catches both.
+      </p>
+
+      <p>
         <strong>Columns:</strong>{" "} Name, Active Package, Active Package
-        Category, Created, Last Activity, Phone, Tags
+        Category, Attendance Total, Created, Days Absent, Intro Offer Purchase
+        Date, Last Activity, Opportunities, Phone, Promo Codes Used, Tags
       </p>
 
       <h3>5. Active Memberships</h3>
@@ -249,7 +284,8 @@ export default function SmartLists() {
 
       <p>
         <strong>Columns:</strong>{" "} Name, Active Package, Active Package
-        Category, Created, Email, Last Activity, Phone, Tags
+        Category, Attendance Total, Created, Date Membership Purchased, Days
+        Absent, Email, Last Activity, Phone, Tags, Weekly Check In
       </p>
 
       <h3>6. Active Packages</h3>
@@ -280,7 +316,8 @@ export default function SmartLists() {
 
       <p>
         <strong>Columns:</strong>{" "} Name, Active Package, Active Package
-        Category, Created, Email, Last Activity, Phone, Tags
+        Category, Attendance Total, Created, Date Packages Purchased, Days
+        Absent, Email, Last Activity, Phone, Tags, Weekly Check In
       </p>
 
       <Callout type="important" title="Save your columns after adding them">
@@ -310,7 +347,8 @@ export default function SmartLists() {
           <strong>AND filters:</strong>{" "} all conditions must be true. For
           example, the Leads Only list requires that Active Package is empty AND
           Past Active Packages is empty AND the contact has an email AND they
-          are not DND. All four conditions must match for a contact to appear.
+          are not DND AND their membership is not paused. All five conditions
+          must match for a contact to appear.
         </li>
         <li>
           <strong>OR filters:</strong>{" "} any condition can be true. For
@@ -352,8 +390,11 @@ export default function SmartLists() {
           </tr>
           <tr>
             <td><code>Active Package Category</code></td>
-            <td>The category grouping of their active package</td>
-            <td>Intro, Memberships, Packages</td>
+            <td>
+              The category of each active package. A contact with more than one
+              active package shows more than one category, separated by commas.
+            </td>
+            <td>Intro Offers (Intro Offer at some studios), Memberships, Packages</td>
           </tr>
           <tr>
             <td><code>Past Active Packages</code></td>
@@ -369,6 +410,11 @@ export default function SmartLists() {
             <td><code>DND</code></td>
             <td>Do Not Disturb status</td>
             <td>Enabled for Email, Enabled for SMS</td>
+          </tr>
+          <tr>
+            <td><code>Location Status</code></td>
+            <td>The contact&rsquo;s overall status, worked out by Core</td>
+            <td>introOffer, activePackage, suspendedMembership, inactive, accountCreated</td>
           </tr>
         </tbody>
       </table>
@@ -387,8 +433,10 @@ export default function SmartLists() {
           than 14. Shows members who have not visited in over two weeks.
         </li>
         <li>
-          <strong>New Members (Month to Date):</strong>{" "} filter on join date
-          within the current month. Shows everyone who joined this month.
+          <strong>New Accounts (Month to Date):</strong>{" "} Join Date within
+          the current month. Join Date is the day the person&rsquo;s Core
+          account was created, so this list shows everyone who signed up this
+          month, leads included, not only new members.
         </li>
         <li>
           <strong>Suspended Members:</strong>{" "} Location Status equals
@@ -411,6 +459,24 @@ export default function SmartLists() {
       </p>
 
       <p>
+        There are two ways to share a list:
+      </p>
+
+      <ul>
+        <li>
+          <strong>With everyone in your location.</strong>{" "} The list becomes
+          a Global List that every user with access to your location can see.
+          The six core lists are shared this way, and it is the right choice
+          for any list your whole team uses.
+        </li>
+        <li>
+          <strong>With selected users.</strong>{" "} Only the people you pick
+          can see it. This can include HQ users, performance managers, and any
+          other staff member with access to your location.
+        </li>
+      </ul>
+
+      <p>
         To share a smart list:
       </p>
 
@@ -418,16 +484,16 @@ export default function SmartLists() {
         <li>Go to the Contacts page</li>
         <li>Click <strong>Manage Smart Lists</strong>{" "} in the toolbox</li>
         <li>Find the smart list you want to share</li>
-        <li>Select the users you want to share it with (this includes HQ users, performance managers, and any other staff member with access to your location)</li>
+        <li>Open its sharing options and choose everyone in the location, or pick the users you want</li>
         <li>Save</li>
       </ol>
 
       <Callout type="important" title="Share your lists with HQ">
         <p>
           If HQ or your performance manager needs visibility into your studio
-          numbers, they need to be added as a shared user on your smart lists.
-          Without this, they cannot see the lists you have created, even though
-          they have access to your location.
+          numbers, share the list with everyone in the location or add them as
+          a shared user. Without this, they cannot see the lists you have
+          created, even though they have access to your location.
         </p>
       </Callout>
 
@@ -452,19 +518,20 @@ export default function SmartLists() {
           operating blind. Share lists with anyone who needs them.
         </li>
         <li>
-          <strong>Confusing &ldquo;Contains&rdquo; with &ldquo;Contains
-          exactly&rdquo;.</strong>{" "} The Active Intro Offer list uses
-          &ldquo;Contains exactly&rdquo; to match the word &ldquo;Intro&rdquo;
-          precisely. The Active Memberships and Active Packages lists use
-          &ldquo;Contains&rdquo; which is a broader match. Using the wrong
-          operator can include or exclude contacts you did not intend.
+          <strong>Using &ldquo;Is&rdquo; instead of &ldquo;Contains&rdquo; on
+          Active Package Category.</strong>{" "} A contact with a membership and
+          a class pack at the same time shows as &ldquo;Memberships,
+          Packages&rdquo;. A filter of Active Package Category is
+          &ldquo;Memberships&rdquo; misses them, while Contains
+          &ldquo;Memberships&rdquo; catches everyone whose categories include
+          that word. All three category lists use Contains for this reason.
         </li>
         <li>
           <strong>Filtering on the wrong field.</strong>{" "} Make sure you are
           using the correct custom field for your filter. For example,{" "}
           <code>Active Package</code>{" "} gives you the specific package name,
           while <code>Active Package Category</code>{" "} gives you the grouping
-          (Intro, Memberships, Packages). Check the{" "}
+          (Intro Offers, Memberships, Packages). Check the{" "}
           <a href="/core-to-grow-integration">Integration</a>{" "} page if you
           are unsure which field to use.
         </li>
