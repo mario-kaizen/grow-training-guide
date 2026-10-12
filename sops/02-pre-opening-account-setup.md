@@ -36,7 +36,7 @@ If any required values are still empty, stop and resolve before proceeding.
 
 ## Step 2 | Verify Category Names in Core
 
-Before creating smart lists or verifying workflow triggers, you must check what Core uses for the intro offer category name.
+Before verifying workflow triggers, check what Core uses for each package category name.
 
 1. Go to `core.hapana.com`
 2. Navigate to the location
@@ -45,82 +45,87 @@ Before creating smart lists or verifying workflow triggers, you must check what 
 5. Note the exact string for the intro offer category: is it `Intro Offers` (plural) or `Intro Offer` (singular)?
 6. Also note: `Memberships` or `Membership`? `Packages` or `Package`?
 
-These exact strings must match in your smart list filters and workflow trigger conditions. The template default may not match this location.
+Workflow trigger conditions must match these exact strings. The template default may not match this location.
+
+Smart lists are more forgiving because they use **contains**: `Intro` matches both `Intro Offers` and `Intro Offer`. Only change a smart list value if this location's Core uses a singular `Membership` or `Package`.
 
 ---
 
 ## Step 3 | Create Smart Lists
 
-Go to **Contacts**. You need to create 6 smart lists with specific filters and columns.
+Go to **Contacts**. You need 6 smart lists with the filters and columns below. These match the template account (`cGie31g8caN2HkP6vN2P`), last checked 2026-10-13.
+
+Use **contains**, never **is**, on Active Package Category. A contact with two active packages holds both categories comma joined (for example `Memberships, Packages`), and **is** misses them.
 
 ### Smart List 1 | All Database w/email minus DND
 
 **Filters:**
 - Email: is not empty
-- DND: is not enabled for Email
+- DND: is not Enabled for Email
 
-**Columns:** Name, Created, Last Activity, Phone, Tags
+**Columns:** Name, Phone, Email, Created, Last Activity, Tags
 
 **Steps:**
 1. Go to Contacts > Filters
 2. Add filter: Email is not empty > Apply
-3. Add filter: DND is not enabled for Email > Apply
+3. Add filter: DND is not Enabled for Email > Apply
 4. Click **Save as Smart List**
 5. Name: paste the name exactly as shown above
-6. Verify columns: Name, Created, Last Activity, Phone, Tags (remove any extras, add any missing)
+6. Verify columns: Name, Phone, Email, Created, Last Activity, Tags (remove any extras, add any missing)
 7. Click **Save** again (columns don't persist until you save after setting them)
 
-### Smart List 2 | Leads Only
+### Smart List 2 | Leads Only (No Active or Past Purchases)
 
 **Filters:**
 - Active Package: is empty
-- Past Active Package: is empty
-- DND: is not enabled
-- DND: is not enabled for SMS
+- Past Active Packages: is empty
+- DND: is not Enabled for Email
+- Email: is not empty
+- Location Status: is not `suspendedMembership`
 
-**Columns:** Name, Created, Last Activity, Phone, Tags, Active Package, Past Active Packages
+**Columns:** Name, Phone, Created, Last Activity, Tags, Past Active Packages
 
 ### Smart List 3 | Active Intro Offer
 
 **Filters:**
-- Active Package Category: contains exactly `[value from Core - Step 2]`
+- Active Package Category: contains `Intro`
 
-Use the exact string from Core. If Core says "Intro Offers" (plural), use "Intro Offers". If Core says "Intro Offer" (singular), use "Intro Offer".
-
-**Columns:** Name, Created, Last Activity, Phone, Tags, Active Package, Active Package Category
+**Columns:** Name, Phone, Created, Last Activity, Tags, Opportunities, Active Package, Active Package Category, Attendance Total, Days Absent, Promo Codes Used, Intro Offer Purchase Date
 
 ### Smart List 4 | Active Packages
 
 **Filters:**
-- Active Package Category: contains exactly `Packages`
+- Active Package Category: contains `Packages`
 
-**Columns:** Name, Created, Last Activity, Phone, Tags, Active Package, Active Package Category
+**Columns:** Name, Phone, Email, Created, Last Activity, Tags, Date Packages Purchased, Weekly Check In, Active Package, Active Package Category, Attendance Total, Days Absent
 
 ### Smart List 5 | Active Memberships
 
 **Filters:**
-- Active Package Category: contains exactly `[value from Core - Step 2]`
+- Active Package Category: contains `Memberships`
 
-Check Core for the exact string. Usually "Memberships" (plural) but verify.
-
-**Columns:** Name, Created, Last Activity, Phone, Tags, Active Package, Active Package Category
+**Columns:** Name, Phone, Email, Created, Last Activity, Tags, Date Membership Purchased, Weekly Check In, Active Package, Active Package Category, Attendance Total, Days Absent
 
 ### Smart List 6 | Past Purchases
 
 **Filters:**
 - Active Package: is empty
 - Past Active Packages: is not empty
-- DND: is not enabled for Email
+- DND: is not Enabled for Email
+- Email: is not empty
+- Location Status: is not `suspendedMembership`
 
-**Columns:** Name, Created, Last Activity, Phone, Tags, Active Package, Past Active Packages
+**Columns:** Name, Phone, Email, Created, Last Activity, Tags, Active Package, Past Active Packages
+
+**Why the Location Status filter on Lists 2 and 6:** when a membership is paused in Core, Active Package goes blank in Grow until it resumes. Without this filter, paused members land in Past Purchases (and occasionally Leads Only) and receive win back or lead messages. On 2026-10-13, 79 of Burleigh's 124 paused members sat in a Past Purchases list built without it.
 
 ### After All 6 Are Created
 
 1. Go back through each smart list and verify:
    - Filters are correct (click into each one, check)
    - Columns are correct (some may have reverted if you didn't save after setting columns)
-2. Go to **Manage Smart List**
-3. **Share all smart lists with everyone** so the studio team can access them
+2. Go to **Manage Smart Lists**
+3. **Share all 6 with everyone in the location** (Global List), not with selected users, so the whole studio team and HQ can see them
 
 ---
 
